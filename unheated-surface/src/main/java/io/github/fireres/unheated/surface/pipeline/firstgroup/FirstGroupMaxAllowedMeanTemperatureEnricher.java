@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 import static io.github.fireres.unheated.surface.pipeline.UnheatedSurfaceReportEnrichType.FIRST_GROUP_MAX_ALLOWED_MEAN_TEMPERATURE;
+import static io.github.fireres.unheated.surface.pipeline.UnheatedSurfaceReportEnrichType.FIRST_GROUP_MAX_ALLOWED_THERMOCOUPLE_TEMPERATURE;
 import static io.github.fireres.unheated.surface.pipeline.UnheatedSurfaceReportEnrichType.FIRST_GROUP_MEAN_WITH_THERMOCOUPLE_TEMPERATURES;
 
 @Component
@@ -40,7 +41,9 @@ public class FirstGroupMaxAllowedMeanTemperatureEnricher implements ReportEnrich
 
     @Override
     public List<ReportEnrichType> getAffectedTypes() {
-        return List.of(FIRST_GROUP_MEAN_WITH_THERMOCOUPLE_TEMPERATURES);
+        return List.of(
+                FIRST_GROUP_MAX_ALLOWED_THERMOCOUPLE_TEMPERATURE,
+                FIRST_GROUP_MEAN_WITH_THERMOCOUPLE_TEMPERATURES);
     }
 
 }
