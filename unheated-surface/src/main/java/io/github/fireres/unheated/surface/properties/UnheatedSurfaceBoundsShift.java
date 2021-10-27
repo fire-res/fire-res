@@ -12,9 +12,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SecondaryGroupBoundsShift implements BoundsShift {
+public class UnheatedSurfaceBoundsShift implements BoundsShift {
 
     @Builder.Default
-    private BoundShift<IntegerPoint> maxAllowedTemperatureShift = new BoundShift<>();
+    private BoundShift<IntegerPoint> maxAllowedMeanTemperatureShift = new BoundShift<>();
+
+    @Builder.Default
+    private BoundShift<IntegerPoint> maxAllowedThermocoupleTemperatureShift = new BoundShift<>();
 
 }

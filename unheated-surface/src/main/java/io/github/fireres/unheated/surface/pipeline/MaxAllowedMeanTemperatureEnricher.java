@@ -1,4 +1,4 @@
-package io.github.fireres.unheated.surface.pipeline.firstgroup;
+package io.github.fireres.unheated.surface.pipeline;
 
 import io.github.fireres.core.properties.GenerationProperties;
 import io.github.fireres.core.pipeline.ReportEnrichType;
@@ -12,14 +12,14 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static io.github.fireres.unheated.surface.pipeline.UnheatedSurfaceReportEnrichType.FIRST_GROUP_MAX_ALLOWED_MEAN_TEMPERATURE;
-import static io.github.fireres.unheated.surface.pipeline.UnheatedSurfaceReportEnrichType.FIRST_GROUP_MAX_ALLOWED_THERMOCOUPLE_TEMPERATURE;
-import static io.github.fireres.unheated.surface.pipeline.UnheatedSurfaceReportEnrichType.FIRST_GROUP_MEAN_WITH_THERMOCOUPLE_TEMPERATURES;
+import static io.github.fireres.unheated.surface.pipeline.UnheatedSurfaceReportEnrichType.MAX_ALLOWED_MEAN_TEMPERATURE;
+import static io.github.fireres.unheated.surface.pipeline.UnheatedSurfaceReportEnrichType.MAX_ALLOWED_THERMOCOUPLE_TEMPERATURE;
+import static io.github.fireres.unheated.surface.pipeline.UnheatedSurfaceReportEnrichType.MEAN_WITH_THERMOCOUPLE_TEMPERATURES;
 
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class FirstGroupMaxAllowedMeanTemperatureEnricher implements ReportEnricher<UnheatedSurfaceReport> {
+public class MaxAllowedMeanTemperatureEnricher implements ReportEnricher<UnheatedSurfaceReport> {
 
     private final GenerationProperties generationProperties;
 
@@ -27,23 +27,25 @@ public class FirstGroupMaxAllowedMeanTemperatureEnricher implements ReportEnrich
     public void enrich(UnheatedSurfaceReport report) {
         val time = generationProperties.getGeneral().getTime();
         val t0 = generationProperties.getGeneral().getEnvironmentTemperature();
+        val bound = report.getProperties().getBound();
+        val type = report.getProperties().getType();
 
-        val meanBound = new MaxAllowedMeanTemperatureGenerator(time, t0)
+        val meanBound = new MaxAllowedMeanTemperatureGenerator(time, t0, bound, type)
                 .generate();
 
-        report.getFirstGroup().setMaxAllowedMeanTemperature(meanBound);
+        report.setMaxAllowedMeanTemperature(meanBound);
     }
 
     @Override
     public boolean supports(ReportEnrichType enrichType) {
-        return FIRST_GROUP_MAX_ALLOWED_MEAN_TEMPERATURE.equals(enrichType);
+        return MAX_ALLOWED_MEAN_TEMPERATURE.equals(enrichType);
     }
 
     @Override
     public List<ReportEnrichType> getAffectedTypes() {
         return List.of(
-                FIRST_GROUP_MAX_ALLOWED_THERMOCOUPLE_TEMPERATURE,
-                FIRST_GROUP_MEAN_WITH_THERMOCOUPLE_TEMPERATURES);
+                MAX_ALLOWED_THERMOCOUPLE_TEMPERATURE,
+                MEAN_WITH_THERMOCOUPLE_TEMPERATURES);
     }
 
 }

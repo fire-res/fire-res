@@ -5,9 +5,8 @@ import io.github.fireres.core.model.IntegerPoint;
 import io.github.fireres.core.model.Sample;
 import io.github.fireres.core.test.AbstractTest;
 import io.github.fireres.unheated.surface.UnheatedSurfaceTestUtils;
-import io.github.fireres.unheated.surface.properties.PrimaryGroupBoundsShift;
+import io.github.fireres.unheated.surface.properties.UnheatedSurfaceBoundsShift;
 import io.github.fireres.unheated.surface.service.UnheatedSurfaceService;
-import io.github.fireres.unheated.surface.properties.SecondaryGroupBoundsShift;
 import io.github.fireres.unheated.surface.properties.UnheatedSurfaceProperties;
 import lombok.val;
 import org.junit.Before;
@@ -31,26 +30,17 @@ public class UnheatedSurfaceReportWithShiftedBoundsRepeatingTest extends Abstrac
                 .getReportPropertiesByClass(UnheatedSurfaceProperties.class)
                 .orElseThrow();
 
-        reportProperties.getFirstGroup().getFunctionForm().getInterpolationPoints().clear();
-        reportProperties.getSecondGroup().getFunctionForm().getInterpolationPoints().clear();
-        reportProperties.getThirdGroup().getFunctionForm().getInterpolationPoints().clear();
+        reportProperties.getFunctionForm().getInterpolationPoints().clear();
 
-        setUpPrimaryBoundsShift(reportProperties.getFirstGroup().getBoundsShift());
-        setUpSecondaryBoundsShift(reportProperties.getSecondGroup().getBoundsShift());
-        setUpSecondaryBoundsShift(reportProperties.getThirdGroup().getBoundsShift());
+        setupBoundsShift(reportProperties.getBoundsShift());
     }
 
-    private void setUpPrimaryBoundsShift(PrimaryGroupBoundsShift primaryBoundsShift) {
+    private void setupBoundsShift(UnheatedSurfaceBoundsShift primaryBoundsShift) {
         primaryBoundsShift.getMaxAllowedMeanTemperatureShift().add(new IntegerPoint(10, -5));
         primaryBoundsShift.getMaxAllowedThermocoupleTemperatureShift().add(new IntegerPoint(10, -5));
 
         primaryBoundsShift.getMaxAllowedMeanTemperatureShift().add(new IntegerPoint(50, 100));
         primaryBoundsShift.getMaxAllowedThermocoupleTemperatureShift().add(new IntegerPoint(50, 100));
-    }
-
-    private void setUpSecondaryBoundsShift(SecondaryGroupBoundsShift secondaryBoundsShift) {
-        secondaryBoundsShift.getMaxAllowedTemperatureShift().add(new IntegerPoint(10, -5));
-        secondaryBoundsShift.getMaxAllowedTemperatureShift().add(new IntegerPoint(50, 100));
     }
 
     @Test

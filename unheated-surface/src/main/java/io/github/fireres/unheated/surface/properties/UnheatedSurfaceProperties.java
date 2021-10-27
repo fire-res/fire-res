@@ -1,5 +1,8 @@
 package io.github.fireres.unheated.surface.properties;
 
+import io.github.fireres.core.properties.BoundsShiftModifier;
+import io.github.fireres.core.properties.FunctionForm;
+import io.github.fireres.core.properties.FunctionFormModifier;
 import io.github.fireres.core.properties.ReportProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,15 +13,24 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UnheatedSurfaceProperties implements ReportProperties {
+public class UnheatedSurfaceProperties implements
+        ReportProperties,
+        FunctionFormModifier<Integer>,
+        BoundsShiftModifier<UnheatedSurfaceBoundsShift> {
 
     @Builder.Default
-    private PrimaryGroupProperties firstGroup = new PrimaryGroupProperties();
+    private Integer thermocoupleCount = 3;
 
     @Builder.Default
-    private SecondaryGroupProperties secondGroup = new SecondaryGroupProperties();
+    private Integer bound = 300;
 
     @Builder.Default
-    private SecondaryGroupProperties thirdGroup = new SecondaryGroupProperties();
+    private FunctionForm<Integer> functionForm = new FunctionForm<>();
+
+    @Builder.Default
+    private UnheatedSurfaceBoundsShift boundsShift = new UnheatedSurfaceBoundsShift();
+
+    @Builder.Default
+    private UnheatedSurfaceType type = UnheatedSurfaceType.PRIMARY;
 
 }
