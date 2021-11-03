@@ -15,7 +15,7 @@ import static org.junit.Assert.assertTrue;
 
 public class TestUtils {
 
-    public static Integer TEST_ATTEMPTS = 1000;
+    public static final int TEST_ATTEMPTS = 1000;
 
     public static void assertFunctionIsConstant(Number expectedValue, List<? extends Point<?>> function) {
         function.forEach(p ->
@@ -88,9 +88,4 @@ public class TestUtils {
                 .collect(Collectors.toList());
     }
 
-    public static void repeatTest(Runnable test) {
-        for (int i = 0; i < TEST_ATTEMPTS; i++) {
-            test.run();
-        }
-    }
 }

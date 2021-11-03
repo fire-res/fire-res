@@ -20,7 +20,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class FireModeReport implements Report<FireModeProperties> {
 
-    private final UUID id;
+    private final FireModeProperties properties;
     private final Sample sample;
 
     private StandardTemperature standardTemperature;
@@ -33,9 +33,7 @@ public class FireModeReport implements Report<FireModeProperties> {
     private MaintainedTemperatures maintainedTemperatures;
 
     @Override
-    public FireModeProperties getProperties() {
-        return sample.getSampleProperties()
-                .getReportPropertiesByClass(FireModeProperties.class)
-                .orElseThrow();
+    public UUID getId() {
+        return properties.getId();
     }
 }

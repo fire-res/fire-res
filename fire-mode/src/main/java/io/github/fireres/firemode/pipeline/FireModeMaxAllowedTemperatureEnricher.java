@@ -12,7 +12,7 @@ import java.util.List;
 
 @Slf4j
 @Component
-public class MaxAllowedTemperatureEnricher implements ReportEnricher<FireModeReport> {
+public class FireModeMaxAllowedTemperatureEnricher implements ReportEnricher<FireModeReport> {
 
     @Override
     public void enrich(FireModeReport report) {

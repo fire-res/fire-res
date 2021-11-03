@@ -8,7 +8,7 @@ import static io.github.fireres.core.test.TestUtils.assertFunctionConstantlyGrow
 import static io.github.fireres.core.test.TestUtils.assertFunctionNotHigher;
 import static io.github.fireres.core.test.TestUtils.assertFunctionNotLower;
 import static io.github.fireres.core.utils.FunctionUtils.constantFunction;
-import static io.github.fireres.unheated.surface.TestGenerationProperties.TIME;
+import static io.github.fireres.unheated.surface.config.TestConfig.TIME;
 import static org.junit.Assert.assertEquals;
 
 public class UnheatedSurfaceTestUtils {

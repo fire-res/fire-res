@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class MeanWithThermocoupleTemperaturesEnricher implements ReportEnricher<FireModeReport> {
+public class FireModeMeanWithThermocoupleTemperaturesEnricher implements ReportEnricher<FireModeReport> {
 
     private final FunctionsGenerationService functionsGenerationService;
 

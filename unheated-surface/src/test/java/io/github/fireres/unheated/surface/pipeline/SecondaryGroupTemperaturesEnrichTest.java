@@ -1,9 +1,9 @@
 package io.github.fireres.unheated.surface.pipeline;
 
-import io.github.fireres.core.properties.GenerationProperties;
 import io.github.fireres.core.model.Sample;
 import io.github.fireres.core.pipeline.ReportEnrichPipeline;
 import io.github.fireres.core.test.AbstractTest;
+import io.github.fireres.unheated.surface.properties.UnheatedSurfaceProperties;
 import io.github.fireres.unheated.surface.report.UnheatedSurfaceReport;
 import io.github.fireres.unheated.surface.service.UnheatedSurfaceService;
 import lombok.val;
@@ -22,12 +22,14 @@ public class SecondaryGroupTemperaturesEnrichTest extends AbstractTest {
     private UnheatedSurfaceService unheatedSurfaceService;
 
     @Autowired
-    private GenerationProperties generationProperties;
+    private UnheatedSurfaceProperties reportProperties;
+
+    @Autowired
+    private Sample sample;
 
     @Test
     public void enrichThermocoupleBound() {
-        val sample = new Sample(generationProperties.getSamples().get(0));
-        val report = unheatedSurfaceService.createReport(sample);
+        val report = unheatedSurfaceService.createReport(sample, reportProperties);
 
         val oldMeanTemperature = report.getMeanTemperature();
         val oldThermocoupleTemperatures = report.getThermocoupleTemperatures();

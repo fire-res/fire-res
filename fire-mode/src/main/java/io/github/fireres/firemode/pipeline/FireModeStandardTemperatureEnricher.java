@@ -1,8 +1,8 @@
 package io.github.fireres.firemode.pipeline;
 
-import io.github.fireres.core.properties.GenerationProperties;
 import io.github.fireres.core.pipeline.ReportEnrichType;
 import io.github.fireres.core.pipeline.ReportEnricher;
+import io.github.fireres.core.properties.GeneralProperties;
 import io.github.fireres.firemode.generator.StandardTempGenerator;
 import io.github.fireres.firemode.report.FireModeReport;
 import lombok.RequiredArgsConstructor;
@@ -22,17 +22,17 @@ import static io.github.fireres.firemode.pipeline.FireModeReportEnrichType.STAND
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class StandardTemperatureEnricher implements ReportEnricher<FireModeReport> {
+public class FireModeStandardTemperatureEnricher implements ReportEnricher<FireModeReport> {
 
-    private final GenerationProperties generationProperties;
+    private final GeneralProperties generalProperties;
 
     @Override
     public void enrich(FireModeReport report) {
         val properties = report.getProperties();
 
         val standardTemperature = StandardTempGenerator.builder()
-                .t0(generationProperties.getGeneral().getEnvironmentTemperature())
-                .time(generationProperties.getGeneral().getTime())
+                .t0(generalProperties.getEnvironmentTemperature())
+                .time(generalProperties.getTime())
                 .fireModeType(properties.getFireModeType())
                 .build()
                 .generate();

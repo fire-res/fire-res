@@ -9,6 +9,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,6 +19,9 @@ public class UnheatedSurfaceProperties implements
         ReportProperties,
         FunctionFormModifier<Integer>,
         BoundsShiftModifier<UnheatedSurfaceBoundsShift> {
+
+    @Builder.Default
+    private UUID id = UUID.randomUUID();
 
     @Builder.Default
     private Integer thermocoupleCount = 3;

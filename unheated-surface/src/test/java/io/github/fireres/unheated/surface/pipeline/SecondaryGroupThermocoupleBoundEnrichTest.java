@@ -1,6 +1,5 @@
 package io.github.fireres.unheated.surface.pipeline;
 
-import io.github.fireres.core.properties.GenerationProperties;
 import io.github.fireres.core.model.Sample;
 import io.github.fireres.core.pipeline.ReportEnrichPipeline;
 import io.github.fireres.core.test.AbstractTest;
@@ -18,24 +17,22 @@ import static org.junit.Assert.assertNotEquals;
 public class SecondaryGroupThermocoupleBoundEnrichTest extends AbstractTest {
 
     @Autowired
-    private GenerationProperties generationProperties;
-
-    @Autowired
     private ReportEnrichPipeline<UnheatedSurfaceReport> reportEnrichPipeline;
 
     @Autowired
     private UnheatedSurfaceService unheatedSurfaceService;
 
+    @Autowired
+    private UnheatedSurfaceProperties reportProperties;
+
+    @Autowired
+    private Sample sample;
+
     @Test
     public void enrichThermocoupleBound() {
-        val sample = new Sample(generationProperties.getSamples().get(0));
+        reportProperties.setType(SECONDARY);
 
-        sample.getSampleProperties()
-                .getReportPropertiesByClass(UnheatedSurfaceProperties.class)
-                .orElseThrow()
-                .setType(SECONDARY);
-
-        val report = unheatedSurfaceService.createReport(sample);
+        val report = unheatedSurfaceService.createReport(sample, reportProperties);
 
         val oldThermocoupleBound = report.getMaxAllowedThermocoupleTemperature();
         val oldMeanTemperature = report.getMeanTemperature();

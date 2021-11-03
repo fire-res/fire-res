@@ -1,6 +1,5 @@
 package io.github.fireres.unheated.surface.report;
 
-import io.github.fireres.core.properties.GenerationProperties;
 import io.github.fireres.core.model.Sample;
 import io.github.fireres.core.test.AbstractTest;
 import io.github.fireres.unheated.surface.properties.UnheatedSurfaceProperties;
@@ -16,9 +15,9 @@ import static io.github.fireres.core.test.TestUtils.assertFunctionIsConstant;
 import static io.github.fireres.core.test.TestUtils.assertFunctionNotHigher;
 import static io.github.fireres.core.test.TestUtils.assertFunctionNotLower;
 import static io.github.fireres.core.utils.FunctionUtils.constantFunction;
-import static io.github.fireres.unheated.surface.TestGenerationProperties.BOUND;
-import static io.github.fireres.unheated.surface.TestGenerationProperties.ENVIRONMENT_TEMPERATURE;
-import static io.github.fireres.unheated.surface.TestGenerationProperties.TIME;
+import static io.github.fireres.unheated.surface.config.TestConfig.BOUND;
+import static io.github.fireres.unheated.surface.config.TestConfig.ENVIRONMENT_TEMPERATURE;
+import static io.github.fireres.unheated.surface.config.TestConfig.TIME;
 import static io.github.fireres.unheated.surface.properties.UnheatedSurfaceType.PRIMARY;
 import static io.github.fireres.unheated.surface.properties.UnheatedSurfaceType.SECONDARY;
 
@@ -28,41 +27,33 @@ public class UnheatedSurfaceReportTest extends AbstractTest {
     private UnheatedSurfaceService unheatedSurfaceService;
 
     @Autowired
-    private GenerationProperties generationProperties;
+    private UnheatedSurfaceProperties reportProperties;
+
+    @Autowired
+    private Sample sample;
 
     @Before
     public void setup() {
-        generationProperties.getSamples().forEach(sampleProperties -> {
-            sampleProperties
-                    .getReportPropertiesByClass(UnheatedSurfaceProperties.class)
-                    .orElseThrow()
-                    .setType(PRIMARY);
-        });
+        sample.removeAllReports();
+        reportProperties.setType(PRIMARY);
     }
 
     @Test
     public void generatePrimaryMeanBound() {
-        val sample = new Sample(generationProperties.getSamples().get(0));
-        val report = unheatedSurfaceService.createReport(sample);
+        val report = unheatedSurfaceService.createReport(sample, reportProperties);
 
         val meanBound = report.getMaxAllowedMeanTemperature();
 
         assertFunctionIsConstant(
                 140 + ENVIRONMENT_TEMPERATURE,
                 meanBound.getValue());
-
     }
 
     @Test
     public void generateSecondaryMeanBound() {
-        val sample = new Sample(generationProperties.getSamples().get(0));
+        reportProperties.setType(SECONDARY);
 
-        sample.getSampleProperties()
-                .getReportPropertiesByClass(UnheatedSurfaceProperties.class)
-                .orElseThrow()
-                .setType(SECONDARY);
-
-        val report = unheatedSurfaceService.createReport(sample);
+        val report = unheatedSurfaceService.createReport(sample, reportProperties);
 
         val meanBound = report.getMaxAllowedMeanTemperature();
 
@@ -71,8 +62,7 @@ public class UnheatedSurfaceReportTest extends AbstractTest {
 
     @Test
     public void generatePrimaryThermocoupleBound() {
-        val sample = new Sample(generationProperties.getSamples().get(0));
-        val report = unheatedSurfaceService.createReport(sample);
+        val report = unheatedSurfaceService.createReport(sample, reportProperties);
 
         val thermocoupleBound = report.getMaxAllowedThermocoupleTemperature();
 
@@ -83,14 +73,9 @@ public class UnheatedSurfaceReportTest extends AbstractTest {
 
     @Test
     public void generateSecondaryThermocoupleBound() {
-        val sample = new Sample(generationProperties.getSamples().get(0));
+        reportProperties.setType(SECONDARY);
 
-        sample.getSampleProperties()
-                .getReportPropertiesByClass(UnheatedSurfaceProperties.class)
-                .orElseThrow()
-                .setType(SECONDARY);
-
-        val report = unheatedSurfaceService.createReport(sample);
+        val report = unheatedSurfaceService.createReport(sample, reportProperties);
 
         val thermocoupleBound = report.getMaxAllowedThermocoupleTemperature();
 
@@ -99,8 +84,7 @@ public class UnheatedSurfaceReportTest extends AbstractTest {
 
     @Test
     public void generatePrimaryReport() {
-        val sample = new Sample(generationProperties.getSamples().get(0));
-        val report = unheatedSurfaceService.createReport(sample);
+        val report = unheatedSurfaceService.createReport(sample, reportProperties);
 
         val thermocoupleBound = report.getMaxAllowedThermocoupleTemperature();
         val meanBound = report.getMaxAllowedMeanTemperature();
@@ -127,14 +111,9 @@ public class UnheatedSurfaceReportTest extends AbstractTest {
 
     @Test
     public void generateSecondaryReport() {
-        val sample = new Sample(generationProperties.getSamples().get(0));
+        reportProperties.setType(SECONDARY);
 
-        sample.getSampleProperties()
-                .getReportPropertiesByClass(UnheatedSurfaceProperties.class)
-                .orElseThrow()
-                .setType(SECONDARY);
-
-        val report = unheatedSurfaceService.createReport(sample);
+        val report = unheatedSurfaceService.createReport(sample, reportProperties);
 
         val meanTemperature = report.getMeanTemperature();
         val thermocoupleBound = report.getMaxAllowedThermocoupleTemperature();

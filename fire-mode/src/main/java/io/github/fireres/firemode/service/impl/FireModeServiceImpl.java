@@ -5,6 +5,7 @@ import io.github.fireres.core.model.Sample;
 import io.github.fireres.core.pipeline.ReportEnrichPipeline;
 import io.github.fireres.core.service.impl.AbstractInterpolationService;
 import io.github.fireres.firemode.model.FireModeType;
+import io.github.fireres.firemode.properties.FireModeProperties;
 import io.github.fireres.firemode.report.FireModeReport;
 import io.github.fireres.firemode.service.FireModeService;
 import lombok.val;
@@ -29,9 +30,9 @@ public class FireModeServiceImpl extends AbstractInterpolationService<FireModeRe
     }
 
     @Override
-    public FireModeReport createReport(UUID reportId, Sample sample) {
-        val report = new FireModeReport(reportId, sample);
-        sample.putReport(report);
+    public FireModeReport createReport(Sample sample, FireModeProperties properties) {
+        val report = new FireModeReport(properties, sample);
+        sample.addReport(report);
 
         reportPipeline.accept(report);
 

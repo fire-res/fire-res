@@ -1,8 +1,8 @@
 package io.github.fireres.heatflow.pipeline;
 
-import io.github.fireres.core.properties.GenerationProperties;
 import io.github.fireres.core.pipeline.ReportEnrichType;
 import io.github.fireres.core.pipeline.ReportEnricher;
+import io.github.fireres.core.properties.GeneralProperties;
 import io.github.fireres.heatflow.generator.MaxAllowedFlowGenerator;
 import io.github.fireres.heatflow.report.HeatFlowReport;
 import lombok.RequiredArgsConstructor;
@@ -15,13 +15,13 @@ import java.util.List;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class BoundEnricher implements ReportEnricher<HeatFlowReport> {
+public class HeatFlowBoundEnricher implements ReportEnricher<HeatFlowReport> {
 
-    private final GenerationProperties generationProperties;
+    private final GeneralProperties generalProperties;
 
     @Override
     public void enrich(HeatFlowReport report) {
-        val time = generationProperties.getGeneral().getTime();
+        val time = generalProperties.getTime();
 
         val bound = new MaxAllowedFlowGenerator(time, report.getProperties().getBound())
                 .generate();

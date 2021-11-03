@@ -4,13 +4,12 @@ import io.github.fireres.core.model.IntegerPoint;
 import io.github.fireres.core.model.Sample;
 import io.github.fireres.core.pipeline.ReportEnrichPipeline;
 import io.github.fireres.core.service.impl.AbstractInterpolationService;
+import io.github.fireres.unheated.surface.properties.UnheatedSurfaceProperties;
 import io.github.fireres.unheated.surface.service.UnheatedSurfaceService;
 import io.github.fireres.unheated.surface.report.UnheatedSurfaceReport;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.UUID;
 
 import static io.github.fireres.unheated.surface.pipeline.UnheatedSurfaceReportEnrichType.MAX_ALLOWED_THERMOCOUPLE_TEMPERATURE;
 import static io.github.fireres.unheated.surface.pipeline.UnheatedSurfaceReportEnrichType.MEAN_WITH_THERMOCOUPLE_TEMPERATURES;
@@ -107,10 +106,10 @@ public class UnheatedSurfaceServiceImpl extends AbstractInterpolationService<Unh
     }
 
     @Override
-    public UnheatedSurfaceReport createReport(UUID reportId, Sample sample) {
-        val report = new UnheatedSurfaceReport(reportId, sample);
+    public UnheatedSurfaceReport createReport(Sample sample, UnheatedSurfaceProperties properties) {
+        val report = new UnheatedSurfaceReport(properties, sample);
 
-        sample.putReport(report);
+        sample.addReport(report);
 
         reportPipeline.accept(report);
 

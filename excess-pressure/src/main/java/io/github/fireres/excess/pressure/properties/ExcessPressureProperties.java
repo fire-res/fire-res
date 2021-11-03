@@ -7,11 +7,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class ExcessPressureProperties implements ReportProperties, BoundsShiftModifier<ExcessPressureBoundsShift> {
+
+    @Builder.Default
+    private UUID id = UUID.randomUUID();
 
     @Builder.Default
     private Double delta = 2d;

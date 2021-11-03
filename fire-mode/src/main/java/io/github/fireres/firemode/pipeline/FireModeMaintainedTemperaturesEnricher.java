@@ -1,12 +1,12 @@
 package io.github.fireres.firemode.pipeline;
 
-import io.github.fireres.core.properties.GenerationProperties;
 import io.github.fireres.core.model.FunctionsGenerationBounds;
 import io.github.fireres.core.model.IntegerPoint;
 import io.github.fireres.core.model.IntegerPointSequence;
 import io.github.fireres.core.model.MaintainedFunctionsGenerationParams;
 import io.github.fireres.core.pipeline.ReportEnrichType;
 import io.github.fireres.core.pipeline.ReportEnricher;
+import io.github.fireres.core.properties.GeneralProperties;
 import io.github.fireres.core.service.FunctionsGenerationService;
 import io.github.fireres.firemode.generator.MaxAllowedTempGenerator;
 import io.github.fireres.firemode.generator.FurnaceTempGenerator;
@@ -34,10 +34,10 @@ import static io.github.fireres.firemode.pipeline.FireModeReportEnrichType.MAINT
 
 @Component
 @RequiredArgsConstructor
-public class MaintainedTemperaturesEnricher implements ReportEnricher<FireModeReport> {
+public class FireModeMaintainedTemperaturesEnricher implements ReportEnricher<FireModeReport> {
 
     private final FunctionsGenerationService functionsGenerationService;
-    private final GenerationProperties generationProperties;
+    private final GeneralProperties generalProperties;
 
     @Override
     public void enrich(FireModeReport report) {
@@ -73,7 +73,7 @@ public class MaintainedTemperaturesEnricher implements ReportEnricher<FireModeRe
     }
 
     private FurnaceTemperature generateMaintainedFurnaceTemperature(StandardTemperature standardTemperature) {
-        return new FurnaceTempGenerator(generationProperties.getGeneral().getEnvironmentTemperature(), standardTemperature).generate();
+        return new FurnaceTempGenerator(generalProperties.getEnvironmentTemperature(), standardTemperature).generate();
     }
 
     private List<ThermocoupleTemperature> generateMaintainedThermocoupleTemperatures(MinAllowedTemperature minAllowedTemperature,
@@ -86,7 +86,7 @@ public class MaintainedTemperaturesEnricher implements ReportEnricher<FireModeRe
 
         val thermocoupleTemperatures = functionsGenerationService.maintainedFunctions(MaintainedFunctionsGenerationParams.builder()
                 .tStart(temperatureMaintainingTime)
-                .tEnd(generationProperties.getGeneral().getTime())
+                .tEnd(generalProperties.getTime())
                 .bounds(FunctionsGenerationBounds.builder()
                         .lowerBound(lowerBound)
                         .upperBound(upperBound)
@@ -111,7 +111,7 @@ public class MaintainedTemperaturesEnricher implements ReportEnricher<FireModeRe
     private StandardTemperature generateMaintainedStandardTemperature(Integer temperature, Integer temperatureMaintainingTime) {
         return new StandardTemperature(constantFunction(
                 temperatureMaintainingTime,
-                generationProperties.getGeneral().getTime(),
+                generalProperties.getTime(),
                 temperature).getValue());
     }
 

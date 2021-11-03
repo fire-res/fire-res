@@ -2,20 +2,37 @@ package io.github.fireres.core.service.impl;
 
 import io.github.fireres.core.model.FunctionsGenerationParams;
 import io.github.fireres.core.model.Point;
+import io.github.fireres.core.model.ValidationResult;
 import io.github.fireres.core.service.ValidationService;
 import lombok.val;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static io.github.fireres.core.model.ValidationError.FORM_NOT_CONSTANTLY_GROWING;
+import static io.github.fireres.core.model.ValidationError.INVALID_BOUNDS;
+import static io.github.fireres.core.model.ValidationError.MEAN_FORM_OUT_OF_BOUNDS;
+import static io.github.fireres.core.model.ValidationStatus.ERROR;
+import static io.github.fireres.core.model.ValidationStatus.SUCCESS;
+
 @Service
 public class ValidationServiceImpl implements ValidationService {
 
     @Override
-    public boolean isFunctionGenerationParamsValid(FunctionsGenerationParams params) {
-        return isUpperBoundGreaterThanLower(params)
-                && isMeanFormInBounds(params)
-                && isFormsConstantlyGrowing(params);
+    public ValidationResult validate(FunctionsGenerationParams params) {
+        if (!isUpperBoundGreaterThanLower(params)) {
+            return new ValidationResult(ERROR, INVALID_BOUNDS);
+        }
+
+        if (!isMeanFormInBounds(params)) {
+            return new ValidationResult(ERROR, MEAN_FORM_OUT_OF_BOUNDS);
+        }
+
+        if (!isFormsConstantlyGrowing(params)) {
+            return new ValidationResult(ERROR, FORM_NOT_CONSTANTLY_GROWING);
+        }
+
+        return new ValidationResult(SUCCESS, null);
     }
 
     private boolean isMeanFormInBounds(FunctionsGenerationParams params) {

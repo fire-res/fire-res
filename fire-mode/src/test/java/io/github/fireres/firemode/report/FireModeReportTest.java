@@ -1,11 +1,12 @@
 package io.github.fireres.firemode.report;
 
-import io.github.fireres.core.properties.GenerationProperties;
 import io.github.fireres.core.model.Sample;
 import io.github.fireres.core.test.AbstractTest;
+import io.github.fireres.firemode.properties.FireModeProperties;
 import io.github.fireres.firemode.service.FireModeService;
 import lombok.val;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -16,15 +17,22 @@ import static io.github.fireres.core.test.TestUtils.toPointList;
 public class FireModeReportTest extends AbstractTest {
 
     @Autowired
-    private GenerationProperties generationProperties;
+    private FireModeService fireModeService;
 
     @Autowired
-    private FireModeService fireModeService;
+    private FireModeProperties reportProperties;
+
+    @Autowired
+    private Sample sample;
+
+    @Before
+    public void setup() {
+        sample.removeAllReports();
+    }
 
     @Test
     public void generateFurnaceTemperature() {
-        val sample = new Sample(generationProperties.getSamples().get(0));
-        val report = fireModeService.createReport(sample);
+        val report = fireModeService.createReport(sample, reportProperties);
 
         val expectedValues = toPointList(List.of(
                 42, 350, 446, 503, 545, 577, 604,
@@ -47,8 +55,7 @@ public class FireModeReportTest extends AbstractTest {
 
     @Test
     public void generateMaxAllowedTemperature() {
-        val sample = new Sample(generationProperties.getSamples().get(0));
-        val report = fireModeService.createReport(sample);
+        val report = fireModeService.createReport(sample, reportProperties);
 
         val expectedFunction = toPointList(List.of(
                 24, 378, 489, 554, 603,
@@ -75,8 +82,7 @@ public class FireModeReportTest extends AbstractTest {
 
     @Test
     public void generateMinAllowedTemperature() {
-        val sample = new Sample(generationProperties.getSamples().get(0));
-        val report = fireModeService.createReport(sample);
+        val report = fireModeService.createReport(sample, reportProperties);
 
         val expectedFunction = toPointList(List.of(
                 18, 280, 361, 410, 445,
@@ -103,8 +109,7 @@ public class FireModeReportTest extends AbstractTest {
 
     @Test
     public void generateStandardTemperature() {
-        val sample = new Sample(generationProperties.getSamples().get(0));
-        val report = fireModeService.createReport(sample);
+        val report = fireModeService.createReport(sample, reportProperties);
 
         val expectedNumbers = toPointList(List.of(
                 21, 329, 425, 482, 524, 556, 583, 606,

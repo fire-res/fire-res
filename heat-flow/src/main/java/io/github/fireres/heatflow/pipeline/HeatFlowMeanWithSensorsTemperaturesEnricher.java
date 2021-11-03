@@ -1,10 +1,10 @@
 package io.github.fireres.heatflow.pipeline;
 
-import io.github.fireres.core.properties.GenerationProperties;
 import io.github.fireres.core.model.FunctionsGenerationBounds;
 import io.github.fireres.core.model.FunctionsGenerationParams;
 import io.github.fireres.core.pipeline.ReportEnrichType;
 import io.github.fireres.core.pipeline.ReportEnricher;
+import io.github.fireres.core.properties.GeneralProperties;
 import io.github.fireres.core.service.FunctionsGenerationService;
 import io.github.fireres.heatflow.service.NormalizationService;
 import io.github.fireres.heatflow.generator.HeatFlowGenerationStrategy;
@@ -24,15 +24,15 @@ import static io.github.fireres.heatflow.pipeline.HeatFlowReportEnrichType.MEAN_
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class MeanWithSensorsTemperaturesEnricher implements ReportEnricher<HeatFlowReport> {
+public class HeatFlowMeanWithSensorsTemperaturesEnricher implements ReportEnricher<HeatFlowReport> {
 
-    private final GenerationProperties generationProperties;
+    private final GeneralProperties generalProperties;
     private final FunctionsGenerationService functionsGenerationService;
     private final NormalizationService normalizationService;
 
     @Override
     public void enrich(HeatFlowReport report) {
-        val time = generationProperties.getGeneral().getTime();
+        val time = generalProperties.getTime();
         val bound = normalizationService.disnormalize(report.getBound()
                 .getShiftedValue(report.getProperties().getBoundsShift().getMaxAllowedFlowShift()));
         val zeroBound = constantFunction(time, 0);

@@ -10,6 +10,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,6 +20,9 @@ public class FireModeProperties implements
         ReportProperties,
         FunctionFormModifier<Integer>,
         BoundsShiftModifier<FireModeBoundsShift> {
+
+    @Builder.Default
+    private UUID id = UUID.randomUUID();
 
     @Builder.Default
     private Integer thermocoupleCount = 3;

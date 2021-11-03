@@ -2,13 +2,15 @@ package io.github.fireres.core.service.impl;
 
 import io.github.fireres.core.exception.FunctionGenerationException;
 import io.github.fireres.core.exception.ImpossibleGenerationException;
+import io.github.fireres.core.exception.ParamsValidationException;
 import io.github.fireres.core.model.FunctionsGenerationParams;
 import io.github.fireres.core.model.IntegerPointSequence;
 import io.github.fireres.core.model.MaintainedFunctionsGenerationParams;
 import io.github.fireres.core.model.Point;
+import io.github.fireres.core.model.ValidationStatus;
+import io.github.fireres.core.properties.GeneralProperties;
 import io.github.fireres.core.utils.FunctionUtils;
 import io.github.fireres.core.properties.FunctionForm;
-import io.github.fireres.core.properties.GenerationProperties;
 import io.github.fireres.core.generator.ChildrenInterpolationPointsGenerator;
 import io.github.fireres.core.generator.FunctionGenerator;
 import io.github.fireres.core.generator.MaintainedFunctionGenerator;
@@ -26,6 +28,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static io.github.fireres.core.model.ValidationStatus.SUCCESS;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -34,15 +38,17 @@ public class FunctionsGenerationServiceImpl implements FunctionsGenerationServic
     private static final Integer BASIS_FUNCTION_GENERATION_ATTEMPTS = 100;
     private static final Integer CHILD_FUNCTIONS_GENERATION_ATTEMPTS = 100;
 
-    private final GenerationProperties generationProperties;
+    private final GeneralProperties generalProperties;
     private final ValidationService validationService;
 
     @Override
     public Pair<IntegerPointSequence, List<IntegerPointSequence>> meanWithChildFunctions(
             FunctionsGenerationParams generationParameters
     ) {
-        if (!validationService.isFunctionGenerationParamsValid(generationParameters)) {
-            throw new ImpossibleGenerationException();
+        val validationResult = validationService.validate(generationParameters);
+
+        if (!validationResult.getStatus().equals(SUCCESS)) {
+            throw new ParamsValidationException(validationResult.getError());
         }
 
         return generateMeanWithChildFunctions(generationParameters);
@@ -95,8 +101,8 @@ public class FunctionsGenerationServiceImpl implements FunctionsGenerationServic
                         .originalForm(functionForm)
                         .lowerBound(params.getChildrenBounds().getLowerBound())
                         .upperBound(params.getChildrenBounds().getUpperBound())
-                        .t0(generationProperties.getGeneral().getEnvironmentTemperature())
-                        .time(generationProperties.getGeneral().getTime())
+                        .t0(generalProperties.getEnvironmentTemperature())
+                        .time(generalProperties.getTime())
                         .functionsGenerationStrategy(params.getStrategy())
                         .build()
                         .generate();
@@ -115,8 +121,8 @@ public class FunctionsGenerationServiceImpl implements FunctionsGenerationServic
                         .functionForm(generationParams.getMeanFunctionForm())
                         .lowerBound(generationParams.getMeanBounds().getLowerBound())
                         .upperBound(generationParams.getMeanBounds().getUpperBound())
-                        .t0(generationProperties.getGeneral().getEnvironmentTemperature())
-                        .time(generationProperties.getGeneral().getTime())
+                        .t0(generalProperties.getEnvironmentTemperature())
+                        .time(generalProperties.getTime())
                         .build()
                         .generate();
             } catch (FunctionGenerationException e) {
@@ -138,7 +144,7 @@ public class FunctionsGenerationServiceImpl implements FunctionsGenerationServic
     private void initializeInterpolationPoints(List<FunctionForm<Integer>> childForms,
                                                FunctionsGenerationParams params) {
 
-        val envTemp = generationProperties.getGeneral().getEnvironmentTemperature();
+        val envTemp = generalProperties.getEnvironmentTemperature();
 
         for (Point<?> meanPoint : params.getMeanFunctionForm().getInterpolationPoints()) {
             val delta = params.getStrategy().resolveDelta(envTemp, meanPoint.getIntValue(),

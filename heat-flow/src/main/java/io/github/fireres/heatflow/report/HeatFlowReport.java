@@ -16,7 +16,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class HeatFlowReport implements Report<HeatFlowProperties> {
 
-    private final UUID id;
+    private final HeatFlowProperties properties;
     private final Sample sample;
 
     private MaxAllowedFlow bound;
@@ -24,9 +24,7 @@ public class HeatFlowReport implements Report<HeatFlowProperties> {
     private List<SensorTemperature> sensorTemperatures;
 
     @Override
-    public HeatFlowProperties getProperties() {
-        return sample.getSampleProperties()
-                .getReportPropertiesByClass(HeatFlowProperties.class)
-                .orElseThrow();
+    public UUID getId() {
+        return properties.getId();
     }
 }

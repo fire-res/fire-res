@@ -17,7 +17,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UnheatedSurfaceReport implements Report<UnheatedSurfaceProperties> {
 
-    private final UUID id;
+    private final UnheatedSurfaceProperties properties;
     private final Sample sample;
 
     private MaxAllowedMeanTemperature maxAllowedMeanTemperature;
@@ -26,9 +26,7 @@ public class UnheatedSurfaceReport implements Report<UnheatedSurfaceProperties> 
     private List<ThermocoupleTemperature> thermocoupleTemperatures;
 
     @Override
-    public UnheatedSurfaceProperties getProperties() {
-        return sample.getSampleProperties()
-                .getReportPropertiesByClass(UnheatedSurfaceProperties.class)
-                .orElseThrow();
+    public UUID getId() {
+        return properties.getId();
     }
 }

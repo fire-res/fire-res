@@ -1,20 +1,18 @@
-package io.github.fireres.core.properties;
+package io.github.fireres.core.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.UUID;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SampleProperties {
+public class ValidationResult {
 
-    private final UUID id = UUID.randomUUID();
+    private ValidationStatus status;
 
-    private String name;
+    private ValidationError error;
 
 }

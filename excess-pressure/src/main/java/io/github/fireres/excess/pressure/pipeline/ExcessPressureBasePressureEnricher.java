@@ -10,7 +10,7 @@ import static io.github.fireres.excess.pressure.pipeline.ExcessPressureReportEnr
 
 @Slf4j
 @Component
-public class BasePressureEnricher implements ReportEnricher<ExcessPressureReport> {
+public class ExcessPressureBasePressureEnricher implements ReportEnricher<ExcessPressureReport> {
 
     @Override
     public void enrich(ExcessPressureReport report) {

@@ -1,9 +1,10 @@
 package io.github.fireres.unheated.surface.pipeline;
 
-import io.github.fireres.core.properties.GenerationProperties;
 import io.github.fireres.core.model.Sample;
 import io.github.fireres.core.pipeline.ReportEnrichPipeline;
+import io.github.fireres.core.properties.GeneralProperties;
 import io.github.fireres.core.test.AbstractTest;
+import io.github.fireres.unheated.surface.properties.UnheatedSurfaceProperties;
 import io.github.fireres.unheated.surface.report.UnheatedSurfaceReport;
 import io.github.fireres.unheated.surface.service.UnheatedSurfaceService;
 import lombok.val;
@@ -16,7 +17,7 @@ import static org.junit.Assert.assertNotEquals;
 public class PrimaryGroupMeanBoundEnrichTest extends AbstractTest {
 
     @Autowired
-    private GenerationProperties generationProperties;
+    private GeneralProperties generalProperties;
 
     @Autowired
     private UnheatedSurfaceService unheatedSurfaceService;
@@ -24,16 +25,21 @@ public class PrimaryGroupMeanBoundEnrichTest extends AbstractTest {
     @Autowired
     private ReportEnrichPipeline<UnheatedSurfaceReport> reportEnrichPipeline;
 
+    @Autowired
+    private UnheatedSurfaceProperties reportProperties;
+
+    @Autowired
+    private Sample sample;
+
     @Test
     public void enrichMeanBound() {
-        val sample = new Sample(generationProperties.getSamples().get(0));
-        val report = unheatedSurfaceService.createReport(sample);
+        val report = unheatedSurfaceService.createReport(sample, reportProperties);
 
         val oldMeanBound = report.getMaxAllowedMeanTemperature();
         val oldMeanTemperature = report.getMeanTemperature();
         val oldThermocoupleTemperatures = report.getThermocoupleTemperatures();
 
-        generationProperties.getGeneral().setEnvironmentTemperature(24);
+        generalProperties.setEnvironmentTemperature(24);
         reportEnrichPipeline.accept(report, MAX_ALLOWED_MEAN_TEMPERATURE);
 
         val newMeanBound = report.getMaxAllowedMeanTemperature();

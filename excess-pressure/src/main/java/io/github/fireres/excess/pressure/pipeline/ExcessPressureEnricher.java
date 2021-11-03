@@ -1,8 +1,8 @@
 package io.github.fireres.excess.pressure.pipeline;
 
-import io.github.fireres.core.properties.GenerationProperties;
 import io.github.fireres.core.pipeline.ReportEnrichType;
 import io.github.fireres.core.pipeline.ReportEnricher;
+import io.github.fireres.core.properties.GeneralProperties;
 import io.github.fireres.excess.pressure.model.MaxAllowedPressure;
 import io.github.fireres.excess.pressure.model.MinAllowedPressure;
 import io.github.fireres.excess.pressure.report.ExcessPressureReport;
@@ -17,13 +17,13 @@ import static io.github.fireres.excess.pressure.pipeline.ExcessPressureReportEnr
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class PressureEnricher implements ReportEnricher<ExcessPressureReport> {
+public class ExcessPressureEnricher implements ReportEnricher<ExcessPressureReport> {
 
-    private final GenerationProperties generationProperties;
+    private final GeneralProperties generalProperties;
 
     @Override
     public void enrich(ExcessPressureReport report) {
-        val time = generationProperties.getGeneral().getTime();
+        val time = generalProperties.getTime();
 
         val minAllowedPressure = new MinAllowedPressure(report.getMinAllowedPressure()
                 .getShiftedValue(report.getProperties().getBoundsShift().getMinAllowedPressureShift()));

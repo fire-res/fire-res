@@ -16,7 +16,7 @@ import static io.github.fireres.firemode.pipeline.FireModeReportEnrichType.MIN_A
 
 @Slf4j
 @Component
-public class MinAllowedTemperatureEnricher implements ReportEnricher<FireModeReport> {
+public class FireModeMinAllowedTemperatureEnricher implements ReportEnricher<FireModeReport> {
 
     @Override
     public void enrich(FireModeReport report) {

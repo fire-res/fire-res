@@ -5,7 +5,7 @@ import io.github.fireres.core.model.FunctionsGenerationParams;
 import io.github.fireres.core.model.IntegerPointSequence;
 import io.github.fireres.core.pipeline.ReportEnricher;
 import io.github.fireres.core.pipeline.ReportEnrichType;
-import io.github.fireres.core.properties.GenerationProperties;
+import io.github.fireres.core.properties.GeneralProperties;
 import io.github.fireres.core.service.FunctionsGenerationService;
 import io.github.fireres.unheated.surface.generator.UnheatedSurfaceGenerationStrategy;
 import io.github.fireres.unheated.surface.model.MeanTemperature;
@@ -24,14 +24,14 @@ import static io.github.fireres.unheated.surface.pipeline.UnheatedSurfaceReportE
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class MeanWithThermocoupleTemperaturesEnricher implements ReportEnricher<UnheatedSurfaceReport> {
+public class UnheatedSurfaceMeanWithThermocoupleTemperaturesEnricher implements ReportEnricher<UnheatedSurfaceReport> {
 
-    private final GenerationProperties generationProperties;
+    private final GeneralProperties generalProperties;
     private final FunctionsGenerationService functionsGenerationService;
 
     @Override
     public void enrich(UnheatedSurfaceReport report) {
-        val time = generationProperties.getGeneral().getTime();
+        val time = generalProperties.getTime();
 
         val thermocoupleBound = new IntegerPointSequence(report
                 .getMaxAllowedThermocoupleTemperature()
