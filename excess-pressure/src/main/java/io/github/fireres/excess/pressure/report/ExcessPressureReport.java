@@ -15,7 +15,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ExcessPressureReport implements Report<ExcessPressureProperties> {
 
-    private final UUID id;
+    private final ExcessPressureProperties properties;
     private final Sample sample;
 
     private Pressure pressure;
@@ -24,9 +24,7 @@ public class ExcessPressureReport implements Report<ExcessPressureProperties> {
     private MaxAllowedPressure maxAllowedPressure;
 
     @Override
-    public ExcessPressureProperties getProperties() {
-        return sample.getSampleProperties()
-                .getReportPropertiesByClass(ExcessPressureProperties.class)
-                .orElseThrow();
+    public UUID getId() {
+        return properties.getId();
     }
 }

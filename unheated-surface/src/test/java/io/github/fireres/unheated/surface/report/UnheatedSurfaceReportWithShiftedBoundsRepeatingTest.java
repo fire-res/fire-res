@@ -1,20 +1,20 @@
 package io.github.fireres.unheated.surface.report;
 
-import io.github.fireres.core.properties.GenerationProperties;
 import io.github.fireres.core.model.IntegerPoint;
 import io.github.fireres.core.model.Sample;
 import io.github.fireres.core.test.AbstractTest;
 import io.github.fireres.unheated.surface.UnheatedSurfaceTestUtils;
-import io.github.fireres.unheated.surface.properties.PrimaryGroupBoundsShift;
+import io.github.fireres.unheated.surface.properties.UnheatedSurfaceBoundsShift;
 import io.github.fireres.unheated.surface.service.UnheatedSurfaceService;
-import io.github.fireres.unheated.surface.properties.SecondaryGroupBoundsShift;
 import io.github.fireres.unheated.surface.properties.UnheatedSurfaceProperties;
 import lombok.val;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.RepeatedTest;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static io.github.fireres.core.test.TestUtils.repeatTest;
+import static io.github.fireres.core.test.TestUtils.TEST_ATTEMPTS;
 
 public class UnheatedSurfaceReportWithShiftedBoundsRepeatingTest extends AbstractTest {
 
@@ -22,25 +22,23 @@ public class UnheatedSurfaceReportWithShiftedBoundsRepeatingTest extends Abstrac
     private UnheatedSurfaceService unheatedSurfaceService;
 
     @Autowired
-    private GenerationProperties generationProperties;
+    private UnheatedSurfaceProperties reportProperties;
 
+    @Autowired
+    private Sample sample;
+
+    @BeforeEach
     @Before
     public void setUpBoundsShift() {
-        val sampleProperties = generationProperties.getSamples().get(0);
-        val reportProperties = sampleProperties
-                .getReportPropertiesByClass(UnheatedSurfaceProperties.class)
-                .orElseThrow();
-
-        reportProperties.getFirstGroup().getFunctionForm().getInterpolationPoints().clear();
-        reportProperties.getSecondGroup().getFunctionForm().getInterpolationPoints().clear();
-        reportProperties.getThirdGroup().getFunctionForm().getInterpolationPoints().clear();
-
-        setUpPrimaryBoundsShift(reportProperties.getFirstGroup().getBoundsShift());
-        setUpSecondaryBoundsShift(reportProperties.getSecondGroup().getBoundsShift());
-        setUpSecondaryBoundsShift(reportProperties.getThirdGroup().getBoundsShift());
+        sample.removeAllReports();
+        reportProperties.getFunctionForm().getInterpolationPoints().clear();
+        setupBoundsShift(reportProperties.getBoundsShift());
     }
 
-    private void setUpPrimaryBoundsShift(PrimaryGroupBoundsShift primaryBoundsShift) {
+    private void setupBoundsShift(UnheatedSurfaceBoundsShift primaryBoundsShift) {
+        primaryBoundsShift.getMaxAllowedThermocoupleTemperatureShift().clear();
+        primaryBoundsShift.getMaxAllowedMeanTemperatureShift().clear();
+
         primaryBoundsShift.getMaxAllowedMeanTemperatureShift().add(new IntegerPoint(10, -5));
         primaryBoundsShift.getMaxAllowedThermocoupleTemperatureShift().add(new IntegerPoint(10, -5));
 
@@ -48,19 +46,12 @@ public class UnheatedSurfaceReportWithShiftedBoundsRepeatingTest extends Abstrac
         primaryBoundsShift.getMaxAllowedThermocoupleTemperatureShift().add(new IntegerPoint(50, 100));
     }
 
-    private void setUpSecondaryBoundsShift(SecondaryGroupBoundsShift secondaryBoundsShift) {
-        secondaryBoundsShift.getMaxAllowedTemperatureShift().add(new IntegerPoint(10, -5));
-        secondaryBoundsShift.getMaxAllowedTemperatureShift().add(new IntegerPoint(50, 100));
-    }
-
+    @RepeatedTest(TEST_ATTEMPTS)
     @Test
     public void provideReportTest() {
-        repeatTest(() -> {
-            val sample = new Sample(generationProperties.getSamples().get(0));
-            val report = unheatedSurfaceService.createReport(sample);
+        val report = unheatedSurfaceService.createReport(sample, reportProperties);
 
-            UnheatedSurfaceTestUtils.assertUnheatedSurfaceReportIsValid(report);
-        });
+        UnheatedSurfaceTestUtils.assertUnheatedSurfaceReportIsValid(report);
     }
 
 }

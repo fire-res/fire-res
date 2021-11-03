@@ -9,6 +9,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,6 +19,9 @@ public class HeatFlowProperties implements
         FunctionFormModifier<Double>,
         BoundsShiftModifier<HeatFlowBoundsShift>,
         ReportProperties {
+
+    @Builder.Default
+    private UUID id = UUID.randomUUID();
 
     @Builder.Default
     private Integer sensorCount = 3;

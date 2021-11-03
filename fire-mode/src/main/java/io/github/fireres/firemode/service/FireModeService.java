@@ -2,11 +2,12 @@ package io.github.fireres.firemode.service;
 
 import io.github.fireres.core.service.InterpolationService;
 import io.github.fireres.core.service.ReportCreatorService;
+import io.github.fireres.firemode.properties.FireModeProperties;
 import io.github.fireres.firemode.report.FireModeReport;
 import io.github.fireres.firemode.model.FireModeType;
 
 public interface FireModeService extends
-        ReportCreatorService<FireModeReport>,
+        ReportCreatorService<FireModeReport, FireModeProperties>,
         InterpolationService<FireModeReport, Integer>,
         FireModeBoundsShiftService {
 

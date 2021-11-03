@@ -1,10 +1,11 @@
 package io.github.fireres.unheated.surface.report;
 
-import io.github.fireres.core.properties.GenerationProperties;
 import io.github.fireres.core.model.Sample;
 import io.github.fireres.core.test.AbstractTest;
+import io.github.fireres.unheated.surface.properties.UnheatedSurfaceProperties;
 import io.github.fireres.unheated.surface.service.UnheatedSurfaceService;
 import lombok.val;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -14,10 +15,11 @@ import static io.github.fireres.core.test.TestUtils.assertFunctionIsConstant;
 import static io.github.fireres.core.test.TestUtils.assertFunctionNotHigher;
 import static io.github.fireres.core.test.TestUtils.assertFunctionNotLower;
 import static io.github.fireres.core.utils.FunctionUtils.constantFunction;
-import static io.github.fireres.unheated.surface.TestGenerationProperties.ENVIRONMENT_TEMPERATURE;
-import static io.github.fireres.unheated.surface.TestGenerationProperties.SECOND_GROUP_BOUND;
-import static io.github.fireres.unheated.surface.TestGenerationProperties.THIRD_GROUP_BOUND;
-import static io.github.fireres.unheated.surface.TestGenerationProperties.TIME;
+import static io.github.fireres.unheated.surface.config.TestConfig.BOUND;
+import static io.github.fireres.unheated.surface.config.TestConfig.ENVIRONMENT_TEMPERATURE;
+import static io.github.fireres.unheated.surface.config.TestConfig.TIME;
+import static io.github.fireres.unheated.surface.properties.UnheatedSurfaceType.PRIMARY;
+import static io.github.fireres.unheated.surface.properties.UnheatedSurfaceType.SECONDARY;
 
 public class UnheatedSurfaceReportTest extends AbstractTest {
 
@@ -25,80 +27,68 @@ public class UnheatedSurfaceReportTest extends AbstractTest {
     private UnheatedSurfaceService unheatedSurfaceService;
 
     @Autowired
-    private GenerationProperties generationProperties;
+    private UnheatedSurfaceProperties reportProperties;
 
-    @Test
-    public void generateMeanBound() {
-        val sample = new Sample(generationProperties.getSamples().get(0));
-        val report = unheatedSurfaceService.createReport(sample);
+    @Autowired
+    private Sample sample;
 
-        //first group
-        {
-            val meanBound = report.getFirstGroup().getMaxAllowedMeanTemperature();
-
-            assertFunctionIsConstant(
-                    140 + ENVIRONMENT_TEMPERATURE,
-                    meanBound.getValue());
-        }
-
-        //second group
-        {
-            val meanBound = report.getSecondGroup().getMaxAllowedMeanTemperature();
-            assertFunctionIsConstant(SECOND_GROUP_BOUND, meanBound.getValue());
-        }
-
-        //third group
-        {
-            val meanBound = report.getThirdGroup().getMaxAllowedMeanTemperature();
-            assertFunctionIsConstant(THIRD_GROUP_BOUND, meanBound.getValue());
-        }
+    @Before
+    public void setup() {
+        sample.removeAllReports();
+        reportProperties.setType(PRIMARY);
     }
 
     @Test
-    public void generateThermocoupleBound() {
-        val sample = new Sample(generationProperties.getSamples().get(0));
-        val report = unheatedSurfaceService.createReport(sample);
+    public void generatePrimaryMeanBound() {
+        val report = unheatedSurfaceService.createReport(sample, reportProperties);
 
-        //first group
-        {
-            val thermocoupleBound = report.getFirstGroup().getMaxAllowedThermocoupleTemperature();
+        val meanBound = report.getMaxAllowedMeanTemperature();
 
-            assertFunctionIsConstant(
-                    180 + ENVIRONMENT_TEMPERATURE,
-                    thermocoupleBound.getValue());
-        }
-
-        //second group
-        {
-            val thermocoupleBound = report.getSecondGroup().getMaxAllowedThermocoupleTemperature();
-
-            assertFunctionIsConstant(
-                    SECOND_GROUP_BOUND,
-                    thermocoupleBound.getValue());
-        }
-
-        //third group
-        {
-            val thermocoupleBound = report.getThirdGroup().getMaxAllowedThermocoupleTemperature();
-
-            assertFunctionIsConstant(
-                    THIRD_GROUP_BOUND,
-                    thermocoupleBound.getValue());
-        }
-
+        assertFunctionIsConstant(
+                140 + ENVIRONMENT_TEMPERATURE,
+                meanBound.getValue());
     }
 
     @Test
-    public void generateFirstGroup() {
-        val sample = new Sample(generationProperties.getSamples().get(0));
-        val report = unheatedSurfaceService.createReport(sample);
+    public void generateSecondaryMeanBound() {
+        reportProperties.setType(SECONDARY);
 
-        val firstGroup = report.getFirstGroup();
+        val report = unheatedSurfaceService.createReport(sample, reportProperties);
 
-        val thermocoupleBound = firstGroup.getMaxAllowedThermocoupleTemperature();
-        val meanBound = firstGroup.getMaxAllowedMeanTemperature();
+        val meanBound = report.getMaxAllowedMeanTemperature();
 
-        val meanTemperature = firstGroup.getMeanTemperature();
+        assertFunctionIsConstant(BOUND, meanBound.getValue());
+    }
+
+    @Test
+    public void generatePrimaryThermocoupleBound() {
+        val report = unheatedSurfaceService.createReport(sample, reportProperties);
+
+        val thermocoupleBound = report.getMaxAllowedThermocoupleTemperature();
+
+        assertFunctionIsConstant(
+                180 + ENVIRONMENT_TEMPERATURE,
+                thermocoupleBound.getValue());
+    }
+
+    @Test
+    public void generateSecondaryThermocoupleBound() {
+        reportProperties.setType(SECONDARY);
+
+        val report = unheatedSurfaceService.createReport(sample, reportProperties);
+
+        val thermocoupleBound = report.getMaxAllowedThermocoupleTemperature();
+
+        assertFunctionIsConstant(BOUND, thermocoupleBound.getValue());
+    }
+
+    @Test
+    public void generatePrimaryReport() {
+        val report = unheatedSurfaceService.createReport(sample, reportProperties);
+
+        val thermocoupleBound = report.getMaxAllowedThermocoupleTemperature();
+        val meanBound = report.getMaxAllowedMeanTemperature();
+        val meanTemperature = report.getMeanTemperature();
 
         assertFunctionConstantlyGrowing(meanTemperature.getValue());
         assertFunctionNotHigher(meanTemperature.getValue(), meanBound.getValue());
@@ -106,7 +96,7 @@ public class UnheatedSurfaceReportTest extends AbstractTest {
                 meanTemperature.getValue(),
                 constantFunction(TIME, 0).getValue());
 
-        val thermocouples = firstGroup.getThermocoupleTemperatures();
+        val thermocouples = report.getThermocoupleTemperatures();
 
         assertChildTemperaturesEqualsMean(thermocouples, meanTemperature);
 
@@ -120,25 +110,22 @@ public class UnheatedSurfaceReportTest extends AbstractTest {
     }
 
     @Test
-    public void generateSecondGroup() {
-        val sample = new Sample(generationProperties.getSamples().get(0));
-        val report = unheatedSurfaceService.createReport(sample);
+    public void generateSecondaryReport() {
+        reportProperties.setType(SECONDARY);
 
-        val secondGroup = report.getSecondGroup();
+        val report = unheatedSurfaceService.createReport(sample, reportProperties);
 
-        val meanTemperature = secondGroup.getMeanTemperature();
-        val thermocoupleBound = secondGroup.getMaxAllowedThermocoupleTemperature();
+        val meanTemperature = report.getMeanTemperature();
+        val thermocoupleBound = report.getMaxAllowedThermocoupleTemperature();
 
-        assertFunctionIsConstant(
-                SECOND_GROUP_BOUND,
-                thermocoupleBound.getValue());
+        assertFunctionIsConstant(BOUND, thermocoupleBound.getValue());
         assertFunctionConstantlyGrowing(meanTemperature.getValue());
         assertFunctionNotHigher(meanTemperature.getValue(), thermocoupleBound.getValue());
         assertFunctionNotLower(
                 meanTemperature.getValue(),
                 constantFunction(TIME, 0).getValue());
 
-        val thermocouples = secondGroup.getThermocoupleTemperatures();
+        val thermocouples = report.getThermocoupleTemperatures();
 
         assertChildTemperaturesEqualsMean(thermocouples, meanTemperature);
 
@@ -150,38 +137,6 @@ public class UnheatedSurfaceReportTest extends AbstractTest {
                     constantFunction(TIME, 0).getValue());
         }
 
-    }
-
-    @Test
-    public void generateThirdGroup() {
-        val sample = new Sample(generationProperties.getSamples().get(0));
-        val report = unheatedSurfaceService.createReport(sample);
-
-        val thirdGroup = report.getThirdGroup();
-
-        val meanTemperature = thirdGroup.getMeanTemperature();
-        val thermocoupleBound = thirdGroup.getMaxAllowedThermocoupleTemperature();
-
-        assertFunctionIsConstant(
-                THIRD_GROUP_BOUND,
-                thermocoupleBound.getValue());
-        assertFunctionConstantlyGrowing(meanTemperature.getValue());
-        assertFunctionNotHigher(meanTemperature.getValue(), thermocoupleBound.getValue());
-        assertFunctionNotLower(
-                meanTemperature.getValue(),
-                constantFunction(TIME, 0).getValue());
-
-        val thermocouples = thirdGroup.getThermocoupleTemperatures();
-
-        assertChildTemperaturesEqualsMean(thermocouples, meanTemperature);
-
-        for (val thermocouple : thermocouples) {
-            assertFunctionConstantlyGrowing(thermocouple.getValue());
-            assertFunctionNotHigher(thermocouple.getValue(), thermocoupleBound.getValue());
-            assertFunctionNotLower(
-                    thermocouple.getValue(),
-                    constantFunction(TIME, 0).getValue());
-        }
     }
 
 }

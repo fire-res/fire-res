@@ -1,9 +1,10 @@
 package io.github.fireres.firemode.pipeline;
 
-import io.github.fireres.core.properties.GenerationProperties;
 import io.github.fireres.core.model.Sample;
 import io.github.fireres.core.pipeline.ReportEnrichPipeline;
+import io.github.fireres.core.properties.GeneralProperties;
 import io.github.fireres.core.test.AbstractTest;
+import io.github.fireres.firemode.properties.FireModeProperties;
 import io.github.fireres.firemode.report.FireModeReport;
 import io.github.fireres.firemode.service.FireModeService;
 import lombok.val;
@@ -15,7 +16,7 @@ import static org.junit.Assert.assertNotEquals;
 public class StandardTemperatureEnrichTest extends AbstractTest {
 
     @Autowired
-    private GenerationProperties generationProperties;
+    private GeneralProperties generalProperties;
 
     @Autowired
     private FireModeService fireModeService;
@@ -23,10 +24,15 @@ public class StandardTemperatureEnrichTest extends AbstractTest {
     @Autowired
     private ReportEnrichPipeline<FireModeReport> reportEnrichPipeline;
 
+    @Autowired
+    private FireModeProperties reportProperties;
+
+    @Autowired
+    private Sample sample;
+
     @Test
     public void enrichStandardTemperature() {
-        val sample = new Sample(generationProperties.getSamples().get(0));
-        val report = fireModeService.createReport(sample);
+        val report = fireModeService.createReport(sample, reportProperties);
 
         report.getProperties().getFunctionForm().getInterpolationPoints().clear();
         reportEnrichPipeline.accept(report);
@@ -38,7 +44,7 @@ public class StandardTemperatureEnrichTest extends AbstractTest {
         val oldMeanTemperature = report.getThermocoupleMeanTemperature();
         val oldThermocoupleTemperatures = report.getThermocoupleTemperatures();
 
-        generationProperties.getGeneral().setEnvironmentTemperature(24);
+        generalProperties.setEnvironmentTemperature(24);
         reportEnrichPipeline.accept(report, FireModeReportEnrichType.STANDARD_TEMPERATURE);
 
         val newMaxAllowedTemperature = report.getMaxAllowedTemperature();

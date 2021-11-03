@@ -4,6 +4,7 @@ import io.github.fireres.core.model.Sample;
 import io.github.fireres.core.pipeline.ReportEnrichPipeline;
 import io.github.fireres.core.service.impl.AbstractInterpolationService;
 import io.github.fireres.heatflow.pipeline.HeatFlowReportEnrichType;
+import io.github.fireres.heatflow.properties.HeatFlowProperties;
 import io.github.fireres.heatflow.report.HeatFlowReport;
 import io.github.fireres.heatflow.service.HeatFlowService;
 import io.github.fireres.heatflow.model.HeatFlowPoint;
@@ -25,9 +26,9 @@ public class HeatFlowServiceImpl extends AbstractInterpolationService<HeatFlowRe
     }
 
     @Override
-    public HeatFlowReport createReport(UUID reportId, Sample sample) {
-        val report = new HeatFlowReport(reportId, sample);
-        sample.putReport(report);
+    public HeatFlowReport createReport(Sample sample, HeatFlowProperties properties) {
+        val report = new HeatFlowReport(properties, sample);
+        sample.addReport(report);
 
         reportPipeline.accept(report);
 

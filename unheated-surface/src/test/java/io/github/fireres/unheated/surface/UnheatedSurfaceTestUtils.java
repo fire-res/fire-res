@@ -1,64 +1,40 @@
 package io.github.fireres.unheated.surface;
 
-import io.github.fireres.core.model.IntegerPoint;
-import io.github.fireres.unheated.surface.model.Group;
 import io.github.fireres.unheated.surface.report.UnheatedSurfaceReport;
 import lombok.val;
-
-import java.util.List;
 
 import static io.github.fireres.core.test.TestUtils.assertChildTemperaturesEqualsMean;
 import static io.github.fireres.core.test.TestUtils.assertFunctionConstantlyGrowing;
 import static io.github.fireres.core.test.TestUtils.assertFunctionNotHigher;
 import static io.github.fireres.core.test.TestUtils.assertFunctionNotLower;
 import static io.github.fireres.core.utils.FunctionUtils.constantFunction;
-import static io.github.fireres.unheated.surface.TestGenerationProperties.TIME;
+import static io.github.fireres.unheated.surface.config.TestConfig.TIME;
 import static org.junit.Assert.assertEquals;
 
 public class UnheatedSurfaceTestUtils {
 
     public static void assertUnheatedSurfaceReportIsValid(UnheatedSurfaceReport report) {
-        assertUnheatedSurfaceGroup(
-                report.getFirstGroup(),
-                report.getFirstGroup().getMaxAllowedMeanTemperature()
-                        .getShiftedValue(report.getProperties().getFirstGroup().getBoundsShift().getMaxAllowedMeanTemperatureShift()),
-                report.getFirstGroup().getMaxAllowedThermocoupleTemperature()
-                        .getShiftedValue(report.getProperties().getFirstGroup().getBoundsShift().getMaxAllowedThermocoupleTemperatureShift()));
+        val meanBound = report.getMaxAllowedMeanTemperature()
+                .getShiftedValue(report.getProperties().getBoundsShift().getMaxAllowedMeanTemperatureShift());
 
-        assertUnheatedSurfaceGroup(
-                report.getSecondGroup(),
-                report.getSecondGroup().getMaxAllowedMeanTemperature()
-                        .getShiftedValue(report.getProperties().getSecondGroup().getBoundsShift().getMaxAllowedTemperatureShift()),
-                report.getSecondGroup().getMaxAllowedThermocoupleTemperature()
-                        .getShiftedValue(report.getProperties().getSecondGroup().getBoundsShift().getMaxAllowedTemperatureShift()));
+        val thermocoupleBound = report.getMaxAllowedThermocoupleTemperature()
+                .getShiftedValue(report.getProperties().getBoundsShift().getMaxAllowedThermocoupleTemperatureShift());
 
-        assertUnheatedSurfaceGroup(
-                report.getThirdGroup(),
-                report.getThirdGroup().getMaxAllowedMeanTemperature()
-                        .getShiftedValue(report.getProperties().getThirdGroup().getBoundsShift().getMaxAllowedTemperatureShift()),
-                report.getThirdGroup().getMaxAllowedThermocoupleTemperature()
-                        .getShiftedValue(report.getProperties().getThirdGroup().getBoundsShift().getMaxAllowedTemperatureShift()));
-    }
-
-    private static void assertUnheatedSurfaceGroup(Group group,
-                                                   List<IntegerPoint> meanBound,
-                                                   List<IntegerPoint> thermocoupleBound) {
-
-        val meanTemp = group.getMeanTemperature();
+        val meanTemp = report.getMeanTemperature();
 
         assertFunctionConstantlyGrowing(meanTemp.getValue());
         assertFunctionNotLower(meanTemp.getValue(), constantFunction(0, TIME).getValue());
 
         //todo: bug
-        //if (meanBound != null) {
-        //    assertFunctionNotHigher(meanTemp.getValue(), meanBound);
-        //} else {
-        //    assertFunctionNotHigher(meanTemp.getValue(), thermocoupleBound);
-        //}
+//        if (meanBound != null) {
+//            assertFunctionNotHigher(meanTemp.getValue(), meanBound);
+//        } else {
+//            assertFunctionNotHigher(meanTemp.getValue(), thermocoupleBound);
+//        }
 
         assertFunctionNotHigher(meanTemp.getValue(), thermocoupleBound);
 
-        val thermocouplesTemps = group.getThermocoupleTemperatures();
+        val thermocouplesTemps = report.getThermocoupleTemperatures();
 
         assertChildTemperaturesEqualsMean(thermocouplesTemps, meanTemp);
 
@@ -71,4 +47,5 @@ public class UnheatedSurfaceTestUtils {
             assertFunctionNotHigher(thermocouplesTemp.getValue(), thermocoupleBound);
         });
     }
+
 }

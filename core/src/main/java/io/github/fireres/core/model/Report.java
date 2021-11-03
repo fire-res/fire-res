@@ -8,8 +8,8 @@ public interface Report<P extends ReportProperties> {
 
     UUID getId();
 
-    Sample getSample();
-
     P getProperties();
+
+    Sample getSample();
 
 }

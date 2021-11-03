@@ -1,9 +1,9 @@
 package io.github.fireres.firemode.pipeline;
 
-import io.github.fireres.core.properties.GenerationProperties;
 import io.github.fireres.core.model.Sample;
 import io.github.fireres.core.pipeline.ReportEnrichPipeline;
 import io.github.fireres.core.test.AbstractTest;
+import io.github.fireres.firemode.properties.FireModeProperties;
 import io.github.fireres.firemode.report.FireModeReport;
 import io.github.fireres.firemode.service.FireModeService;
 import lombok.val;
@@ -15,18 +15,20 @@ import static org.junit.Assert.assertNotEquals;
 public class MeanWithThermocoupleTemperaturesEnrichTest extends AbstractTest {
 
     @Autowired
-    private GenerationProperties generationProperties;
-
-    @Autowired
     private FireModeService fireModeService;
 
     @Autowired
     private ReportEnrichPipeline<FireModeReport> reportEnrichPipeline;
 
+    @Autowired
+    private FireModeProperties reportProperties;
+
+    @Autowired
+    private Sample sample;
+
     @Test
     public void enrichSamplePressure() {
-        val sample = new Sample(generationProperties.getSamples().get(0));
-        val report = fireModeService.createReport(sample);
+        val report = fireModeService.createReport(sample, reportProperties);
 
         val oldSampleMeanTemperature = report.getThermocoupleMeanTemperature();
         val oldSampleThermocoupleTemperatures = report.getThermocoupleTemperatures();
