@@ -5,8 +5,8 @@ import io.github.fireres.core.model.DoublePointSequence;
 
 import java.util.List;
 
-public class Pressure extends DoublePointSequence {
-    public Pressure(List<DoublePoint> value) {
+public class ExcessPressure extends DoublePointSequence {
+    public ExcessPressure(List<DoublePoint> value) {
         super(value);
     }
 

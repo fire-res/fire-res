@@ -1,5 +1,6 @@
 package io.github.fireres.core.properties;
 
+import io.github.fireres.core.model.ReportType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
