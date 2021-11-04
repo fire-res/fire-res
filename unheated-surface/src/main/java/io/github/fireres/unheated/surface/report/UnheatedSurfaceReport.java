@@ -1,6 +1,7 @@
 package io.github.fireres.unheated.surface.report;
 
 import io.github.fireres.core.model.Report;
+import io.github.fireres.core.model.ReportType;
 import io.github.fireres.core.model.Sample;
 import io.github.fireres.unheated.surface.model.MaxAllowedMeanTemperature;
 import io.github.fireres.unheated.surface.model.MaxAllowedThermocoupleTemperature;
@@ -13,9 +14,13 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 import java.util.UUID;
 
+import static io.github.fireres.unheated.surface.report.UnheatedSurfaceReportType.UNHEATED_SURFACE;
+
 @Data
 @RequiredArgsConstructor
 public class UnheatedSurfaceReport implements Report<UnheatedSurfaceProperties> {
+
+    private final ReportType type = UNHEATED_SURFACE;
 
     private final UnheatedSurfaceProperties properties;
     private final Sample sample;

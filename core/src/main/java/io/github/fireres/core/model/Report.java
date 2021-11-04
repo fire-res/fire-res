@@ -12,4 +12,6 @@ public interface Report<P extends ReportProperties> {
 
     Sample getSample();
 
+    ReportType getType();
+
 }

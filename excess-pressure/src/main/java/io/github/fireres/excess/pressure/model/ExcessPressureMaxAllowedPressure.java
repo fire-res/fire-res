@@ -5,8 +5,8 @@ import io.github.fireres.core.model.DoublePoint;
 
 import java.util.List;
 
-public class MinAllowedPressure extends DoubleBound {
-    public MinAllowedPressure(List<DoublePoint> value) {
+public class ExcessPressureMaxAllowedPressure extends DoubleBound {
+    public ExcessPressureMaxAllowedPressure(List<DoublePoint> value) {
         super(value);
     }
 }

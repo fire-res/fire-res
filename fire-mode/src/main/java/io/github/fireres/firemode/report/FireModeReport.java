@@ -1,6 +1,7 @@
 package io.github.fireres.firemode.report;
 
 import io.github.fireres.core.model.Report;
+import io.github.fireres.core.model.ReportType;
 import io.github.fireres.core.model.Sample;
 import io.github.fireres.firemode.properties.FireModeProperties;
 import io.github.fireres.firemode.model.FurnaceTemperature;
@@ -16,9 +17,13 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 import java.util.UUID;
 
+import static io.github.fireres.firemode.report.FireModeReportType.FIRE_MODE;
+
 @Data
 @RequiredArgsConstructor
 public class FireModeReport implements Report<FireModeProperties> {
+
+    private final ReportType type = FIRE_MODE;
 
     private final FireModeProperties properties;
     private final Sample sample;
