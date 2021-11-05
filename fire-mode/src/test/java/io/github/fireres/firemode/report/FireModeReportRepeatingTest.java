@@ -36,6 +36,7 @@ public class FireModeReportRepeatingTest extends AbstractTest {
     @Before
     public void setup() {
         sample.removeAllReports();
+        reportProperties.getFunctionForm().getInterpolationPoints().clear();
     }
 
     @RepeatedTest(TEST_ATTEMPTS)
