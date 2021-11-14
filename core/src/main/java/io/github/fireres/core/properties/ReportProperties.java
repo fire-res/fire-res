@@ -9,4 +9,6 @@ public interface ReportProperties {
 
     UUID getId();
 
+    void setId(UUID id);
+
 }
