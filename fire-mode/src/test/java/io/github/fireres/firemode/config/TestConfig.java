@@ -25,7 +25,7 @@ public class TestConfig {
     public static final UUID FIRE_MODE_ID = UUID.randomUUID();
 
     public static final List<Point<Integer>> INTERPOLATION_POINTS = new ArrayList<>() {{
-        add(new IntegerPoint(0, 21));
+        add(new IntegerPoint(0, 40));
         add(new IntegerPoint(1, 306));
         add(new IntegerPoint(18, 749));
         add(new IntegerPoint(21, 789));

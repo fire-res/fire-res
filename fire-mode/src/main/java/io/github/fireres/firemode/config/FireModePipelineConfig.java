@@ -20,17 +20,17 @@ public class FireModePipelineConfig {
     @Bean
     public ReportEnrichPipeline<FireModeReport> fireModePipeline(
             FireModeStandardTemperatureEnricher fireModeStandardTemperatureEnricher,
+            FireModeFurnaceTemperatureEnricher fireModeFurnaceTemperatureEnricher,
             FireModeMinAllowedTemperatureEnricher fireModeMinAllowedTemperatureEnricher,
             FireModeMaxAllowedTemperatureEnricher fireModeMaxAllowedTemperatureEnricher,
-            FireModeFurnaceTemperatureEnricher fireModeFurnaceTemperatureEnricher,
             FireModeMeanWithThermocoupleTemperaturesEnricher fireModeMeanWithThermocoupleTemperaturesEnricher,
             FireModeMaintainedTemperaturesEnricher fireModeMaintainedTemperaturesEnricher
     ) {
         return new DefaultReportEnrichPipeline<>(List.of(
                 fireModeStandardTemperatureEnricher,
+                fireModeFurnaceTemperatureEnricher,
                 fireModeMinAllowedTemperatureEnricher,
                 fireModeMaxAllowedTemperatureEnricher,
-                fireModeFurnaceTemperatureEnricher,
                 fireModeMeanWithThermocoupleTemperaturesEnricher,
                 fireModeMaintainedTemperaturesEnricher
         ));

@@ -20,9 +20,9 @@ public class FireModeMinAllowedTemperatureEnricher implements ReportEnricher<Fir
 
     @Override
     public void enrich(FireModeReport report) {
-        val standardTemperature = report.getStandardTemperature();
+        val furnaceTemperature = report.getFurnaceTemperature();
 
-        val minAllowedTemperature = new MinAllowedTempGenerator(standardTemperature)
+        val minAllowedTemperature = new MinAllowedTempGenerator(furnaceTemperature)
                 .generate();
 
         report.setMinAllowedTemperature(minAllowedTemperature);

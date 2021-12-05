@@ -54,8 +54,8 @@ public class FireModeMaintainedTemperaturesEnricher implements ReportEnricher<Fi
     private MaintainedTemperatures generateMaintainedTemperatures(FireModeReport report, Integer temperatureMaintainingTime) {
         val standardTemperature = generateMaintainedStandardTemperature(report.getProperties().getTemperaturesMaintaining(), temperatureMaintainingTime);
         val furnaceTemperature = generateMaintainedFurnaceTemperature(standardTemperature);
-        val minAllowedTemperature = generateMaintainedMinAllowedTemperature(standardTemperature);
-        val maxAllowedTemperature = generateMaintainedMaxAllowedTemperature(standardTemperature);
+        val minAllowedTemperature = generateMaintainedMinAllowedTemperature(furnaceTemperature);
+        val maxAllowedTemperature = generateMaintainedMaxAllowedTemperature(furnaceTemperature);
 
         val thermocoupleTemperatures = generateMaintainedThermocoupleTemperatures(
                 minAllowedTemperature, maxAllowedTemperature, report, temperatureMaintainingTime);
@@ -100,12 +100,12 @@ public class FireModeMaintainedTemperaturesEnricher implements ReportEnricher<Fi
                 .collect(Collectors.toList());
     }
 
-    private MaxAllowedTemperature generateMaintainedMaxAllowedTemperature(StandardTemperature standardTemperature) {
-        return new MaxAllowedTempGenerator(standardTemperature).generate();
+    private MaxAllowedTemperature generateMaintainedMaxAllowedTemperature(FurnaceTemperature furnaceTemperature) {
+        return new MaxAllowedTempGenerator(furnaceTemperature).generate();
     }
 
-    private MinAllowedTemperature generateMaintainedMinAllowedTemperature(StandardTemperature standardTemperature) {
-        return new MinAllowedTempGenerator(standardTemperature).generate();
+    private MinAllowedTemperature generateMaintainedMinAllowedTemperature(FurnaceTemperature furnaceTemperature) {
+        return new MinAllowedTempGenerator(furnaceTemperature).generate();
     }
 
     private StandardTemperature generateMaintainedStandardTemperature(Integer temperature, Integer temperatureMaintainingTime) {

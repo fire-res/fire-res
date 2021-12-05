@@ -16,9 +16,9 @@ public class FireModeMaxAllowedTemperatureEnricher implements ReportEnricher<Fir
 
     @Override
     public void enrich(FireModeReport report) {
-        val standardTemperature = report.getStandardTemperature();
+        val furnaceTemperature = report.getFurnaceTemperature();
 
-        val maxAllowedTemperature = new MaxAllowedTempGenerator(standardTemperature)
+        val maxAllowedTemperature = new MaxAllowedTempGenerator(furnaceTemperature)
                 .generate();
 
         report.setMaxAllowedTemperature(maxAllowedTemperature);

@@ -75,8 +75,8 @@ public class FireModeReportWithShiftedBoundsRepeatingTest extends AbstractTest {
 
         assertFunctionNotHigher(minAllowedTemp, maxAllowedTemp);
 
-        assertFunctionNotLower(standardTemp, minAllowedTemp);
-        assertFunctionNotHigher(standardTemp, maxAllowedTemp);
+        assertFunctionNotLower(furnaceTemp, minAllowedTemp);
+        assertFunctionNotHigher(furnaceTemp, maxAllowedTemp);
 
         val meanTemp = report.getThermocoupleMeanTemperature();
 

@@ -48,9 +48,9 @@ public class FireModeStandardTemperatureEnricher implements ReportEnricher<FireM
     @Override
     public List<ReportEnrichType> getAffectedTypes() {
         return List.of(
+                FURNACE_TEMPERATURE,
                 MIN_ALLOWED_TEMPERATURE,
                 MAX_ALLOWED_TEMPERATURE,
-                FURNACE_TEMPERATURE,
                 MEAN_WITH_THERMOCOUPLE_TEMPERATURES,
                 MAINTAINED_TEMPERATURES);
     }
