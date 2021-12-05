@@ -1,10 +1,10 @@
 package io.github.fireres.firemode.generator;
 
+import io.github.fireres.firemode.model.FurnaceTemperature;
 import io.github.fireres.firemode.properties.Coefficient;
 import io.github.fireres.firemode.properties.Coefficients;
 import io.github.fireres.core.generator.PointSequenceGenerator;
 import io.github.fireres.firemode.model.MaxAllowedTemperature;
-import io.github.fireres.firemode.model.StandardTemperature;
 import io.github.fireres.core.model.IntegerPoint;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,20 +26,20 @@ public class MaxAllowedTempGenerator implements PointSequenceGenerator<MaxAllowe
             new Coefficient(31, Integer.MAX_VALUE, 1.05)
     ));
 
-    private final StandardTemperature standardTemp;
+    private final FurnaceTemperature furnaceTemperature;
 
     @Override
     public MaxAllowedTemperature generate() {
-        if (standardTemp.getValue().isEmpty()) {
+        if (furnaceTemperature.getValue().isEmpty()) {
             return new MaxAllowedTemperature(emptyList());
         }
 
-        val start = standardTemp.getValue().get(0).getTime();
-        val end = standardTemp.getValue().get(standardTemp.getValue().size() - 1).getTime();
+        val start = furnaceTemperature.getValue().get(0).getTime();
+        val end = furnaceTemperature.getValue().get(furnaceTemperature.getValue().size() - 1).getTime();
 
         val maxAllowedTemp = IntStream.range(start, end + 1)
                 .mapToObj(t -> new IntegerPoint(t,
-                        (int) Math.round(standardTemp.getPoint(t).getValue() * COEFFICIENTS.getCoefficient(t))))
+                        (int) Math.round(furnaceTemperature.getPoint(t).getValue() * COEFFICIENTS.getCoefficient(t))))
                 .collect(Collectors.toList());
 
         return new MaxAllowedTemperature(maxAllowedTemp);
