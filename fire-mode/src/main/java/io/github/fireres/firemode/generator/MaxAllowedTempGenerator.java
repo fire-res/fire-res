@@ -7,6 +7,7 @@ import io.github.fireres.core.generator.PointSequenceGenerator;
 import io.github.fireres.firemode.model.MaxAllowedTemperature;
 import io.github.fireres.core.model.IntegerPoint;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
@@ -27,6 +28,8 @@ public class MaxAllowedTempGenerator implements PointSequenceGenerator<MaxAllowe
     ));
 
     private final StandardTemperature standardTemperature;
+    @Setter
+    private Coefficients customCoefficients = COEFFICIENTS;
 
     @Override
     public MaxAllowedTemperature generate() {
@@ -39,7 +42,7 @@ public class MaxAllowedTempGenerator implements PointSequenceGenerator<MaxAllowe
 
         val maxAllowedTemp = IntStream.range(start, end + 1)
                 .mapToObj(t -> new IntegerPoint(t,
-                        (int) Math.round(standardTemperature.getPoint(t).getValue() * COEFFICIENTS.getCoefficient(t))))
+                        (int) Math.round(standardTemperature.getPoint(t).getValue() * customCoefficients.getCoefficient(t))))
                 .collect(Collectors.toList());
 
         return new MaxAllowedTemperature(maxAllowedTemp);

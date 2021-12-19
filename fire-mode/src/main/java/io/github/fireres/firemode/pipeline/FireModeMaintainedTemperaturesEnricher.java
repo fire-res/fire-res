@@ -16,8 +16,11 @@ import io.github.fireres.firemode.model.MinAllowedTemperature;
 import io.github.fireres.firemode.model.StandardTemperature;
 import io.github.fireres.firemode.model.ThermocoupleMeanTemperature;
 import io.github.fireres.firemode.model.ThermocoupleTemperature;
+import io.github.fireres.firemode.properties.Coefficient;
+import io.github.fireres.firemode.properties.Coefficients;
 import io.github.fireres.firemode.report.FireModeReport;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.stereotype.Component;
 
@@ -32,6 +35,7 @@ import static io.github.fireres.firemode.pipeline.FireModeReportEnrichType.MAINT
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class FireModeMaintainedTemperaturesEnricher implements ReportEnricher<FireModeReport> {
 
     private final FunctionsGenerationService functionsGenerationService;
@@ -93,11 +97,25 @@ public class FireModeMaintainedTemperaturesEnricher implements ReportEnricher<Fi
     }
 
     private MaxAllowedTemperature generateMaintainedMaxAllowedTemperature(StandardTemperature standardTemperature) {
-        return new MaxAllowedTempGenerator(standardTemperature).generate();
+        MaxAllowedTempGenerator maxAllowedTempGenerator = new MaxAllowedTempGenerator(standardTemperature);
+        Coefficients coefficients = new Coefficients(List.of(
+                new Coefficient(0, Integer.MAX_VALUE, 1.05)
+        ));
+
+        maxAllowedTempGenerator.setCustomCoefficients(coefficients);
+
+        return maxAllowedTempGenerator.generate();
     }
 
     private MinAllowedTemperature generateMaintainedMinAllowedTemperature(StandardTemperature standardTemperature) {
-        return new MinAllowedTempGenerator(standardTemperature).generate();
+        MinAllowedTempGenerator minAllowedTempGenerator = new MinAllowedTempGenerator(standardTemperature);
+        Coefficients coefficients = new Coefficients(List.of(
+                new Coefficient(0, Integer.MAX_VALUE, 0.95)
+        ));
+
+        minAllowedTempGenerator.setCustomCoefficients(coefficients);
+
+        return minAllowedTempGenerator.generate();
     }
 
     private StandardTemperature generateMaintainedStandardTemperature(Integer temperature, Integer temperatureMaintainingTime) {
