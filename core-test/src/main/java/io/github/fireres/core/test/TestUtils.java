@@ -89,9 +89,7 @@ public class TestUtils {
     }
 
     public static List<IntegerPoint> toPointList(List<Integer> list) {
-        return IntStream.range(0, list.size())
-                .mapToObj(i -> new IntegerPoint(i, list.get(i)))
-                .collect(Collectors.toList());
+        return toPointList(list, 0);
     }
 
 }
