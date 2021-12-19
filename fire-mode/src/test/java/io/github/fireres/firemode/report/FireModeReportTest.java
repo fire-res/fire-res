@@ -53,7 +53,7 @@ public class FireModeReportTest extends AbstractTest {
                 993, 996, 999, 1002, 1004,
                 1006, 1009, 1011, 1013, 1015,
                 1017
-        ), 0);
+        ));
 
         val maxAllowedTemp = report.getMaxAllowedTemperature();
 
@@ -80,7 +80,7 @@ public class FireModeReportTest extends AbstractTest {
                 899, 902, 903, 906, 908,
                 910, 913, 915, 917, 919,
                 921
-        ), 0);
+        ));
 
         val minAllowedTemp = report.getMinAllowedTemperature();
 
@@ -107,7 +107,7 @@ public class FireModeReportTest extends AbstractTest {
                 946, 949, 951, 954, 956,
                 958, 961, 963, 965, 967,
                 969
-        ), 0);
+        ));
 
         val standardTemperature = report.getStandardTemperature();
 
