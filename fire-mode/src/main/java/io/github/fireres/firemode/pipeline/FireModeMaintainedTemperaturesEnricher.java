@@ -20,7 +20,6 @@ import io.github.fireres.firemode.properties.Coefficient;
 import io.github.fireres.firemode.properties.Coefficients;
 import io.github.fireres.firemode.report.FireModeReport;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.stereotype.Component;
 
@@ -35,7 +34,6 @@ import static io.github.fireres.firemode.pipeline.FireModeReportEnrichType.MAINT
 
 @Component
 @RequiredArgsConstructor
-@Slf4j
 public class FireModeMaintainedTemperaturesEnricher implements ReportEnricher<FireModeReport> {
 
     private final FunctionsGenerationService functionsGenerationService;
