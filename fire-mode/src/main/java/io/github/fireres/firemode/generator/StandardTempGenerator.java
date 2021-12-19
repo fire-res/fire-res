@@ -24,7 +24,7 @@ public class StandardTempGenerator implements PointSequenceGenerator<StandardTem
     @Override
     public StandardTemperature generate() {
         val standardTemp = IntStream.range(1, time)
-                .mapToObj(t -> new IntegerPoint(t, fireModeType.getFunction().apply(t)))
+                .mapToObj(t -> new IntegerPoint(t, fireModeType.getFunction().apply(t) + t0))
                 .collect(Collectors.toList());
 
         standardTemp.add(0, new IntegerPoint(0, t0));

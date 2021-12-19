@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static io.github.fireres.firemode.pipeline.FireModeReportEnrichType.FURNACE_TEMPERATURE;
 import static io.github.fireres.firemode.pipeline.FireModeReportEnrichType.MAINTAINED_TEMPERATURES;
 import static io.github.fireres.firemode.pipeline.FireModeReportEnrichType.MAX_ALLOWED_TEMPERATURE;
 import static io.github.fireres.firemode.pipeline.FireModeReportEnrichType.MEAN_WITH_THERMOCOUPLE_TEMPERATURES;
@@ -48,7 +47,6 @@ public class FireModeStandardTemperatureEnricher implements ReportEnricher<FireM
     @Override
     public List<ReportEnrichType> getAffectedTypes() {
         return List.of(
-                FURNACE_TEMPERATURE,
                 MIN_ALLOWED_TEMPERATURE,
                 MAX_ALLOWED_TEMPERATURE,
                 MEAN_WITH_THERMOCOUPLE_TEMPERATURES,

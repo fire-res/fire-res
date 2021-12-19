@@ -39,7 +39,6 @@ public class StandardTemperatureEnrichTest extends AbstractTest {
 
         val oldMaxAllowedTemperature = report.getMaxAllowedTemperature();
         val oldMinAllowedTemperature = report.getMinAllowedTemperature();
-        val oldFurnaceTemperature = report.getFurnaceTemperature();
         val oldStandardTemperature = report.getStandardTemperature();
         val oldMeanTemperature = report.getThermocoupleMeanTemperature();
         val oldThermocoupleTemperatures = report.getThermocoupleTemperatures();
@@ -49,14 +48,12 @@ public class StandardTemperatureEnrichTest extends AbstractTest {
 
         val newMaxAllowedTemperature = report.getMaxAllowedTemperature();
         val newMinAllowedTemperature = report.getMinAllowedTemperature();
-        val newFurnaceTemperature = report.getFurnaceTemperature();
         val newStandardTemperature = report.getStandardTemperature();
         val newMeanTemperature = report.getThermocoupleMeanTemperature();
         val newThermocoupleTemperatures = report.getThermocoupleTemperatures();
 
         assertNotEquals(oldMaxAllowedTemperature, newMaxAllowedTemperature);
         assertNotEquals(oldMinAllowedTemperature, newMinAllowedTemperature);
-        assertNotEquals(oldFurnaceTemperature, newFurnaceTemperature);
         assertNotEquals(oldStandardTemperature, newStandardTemperature);
         assertNotEquals(oldMeanTemperature, newMeanTemperature);
         assertNotEquals(oldThermocoupleTemperatures, newThermocoupleTemperatures);

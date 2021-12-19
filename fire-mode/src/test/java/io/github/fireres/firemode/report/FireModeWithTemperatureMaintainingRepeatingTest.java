@@ -46,19 +46,18 @@ public class FireModeWithTemperatureMaintainingRepeatingTest extends AbstractTes
 
         val report = fireModeService.createReport(sample, reportProperties);
 
-        val furnaceTemp = report.getFurnaceTemperature().getValue();
         val minAllowedTemp = report.getMinAllowedTemperature().getValue();
         val maxAllowedTemp = report.getMaxAllowedTemperature().getValue();
         val standardTemp = report.getStandardTemperature().getValue();
 
         //noinspection unchecked
-        assertSizesEquals(TIME, furnaceTemp, minAllowedTemp, maxAllowedTemp, standardTemp);
+        assertSizesEquals(TIME, minAllowedTemp, maxAllowedTemp, standardTemp);
 
         assertFunctionConstantlyGrowing(minAllowedTemp);
         assertFunctionNotHigher(minAllowedTemp, maxAllowedTemp);
 
-        assertFunctionNotLower(furnaceTemp, minAllowedTemp);
-        assertFunctionNotHigher(furnaceTemp, maxAllowedTemp);
+        assertFunctionNotLower(standardTemp, minAllowedTemp);
+        assertFunctionNotHigher(standardTemp, maxAllowedTemp);
 
         val meanTemp = report.getThermocoupleMeanTemperature();
 
@@ -81,24 +80,22 @@ public class FireModeWithTemperatureMaintainingRepeatingTest extends AbstractTes
         });
 
         assertNotNull(report.getMaintainedTemperatures());
-        assertNotNull(report.getMaintainedTemperatures().getFurnaceTemperature());
         assertNotNull(report.getMaintainedTemperatures().getStandardTemperature());
         assertNotNull(report.getMaintainedTemperatures().getMinAllowedTemperature());
         assertNotNull(report.getMaintainedTemperatures().getMaxAllowedTemperature());
         assertNotNull(report.getMaintainedTemperatures().getThermocoupleTemperatures());
         assertNotNull(report.getMaintainedTemperatures().getThermocoupleMeanTemperature());
 
-        assertSizesEquals(65, report.getMaintainedTemperatures().getFurnaceTemperature().getValue());
-        assertSizesEquals(65, report.getMaintainedTemperatures().getStandardTemperature().getValue());
-        assertSizesEquals(65, report.getMaintainedTemperatures().getMinAllowedTemperature().getValue());
-        assertSizesEquals(65, report.getMaintainedTemperatures().getMaxAllowedTemperature().getValue());
-        assertSizesEquals(65, report.getMaintainedTemperatures().getThermocoupleMeanTemperature().getValue());
+        assertSizesEquals(66, report.getMaintainedTemperatures().getStandardTemperature().getValue());
+        assertSizesEquals(66, report.getMaintainedTemperatures().getMinAllowedTemperature().getValue());
+        assertSizesEquals(66, report.getMaintainedTemperatures().getMaxAllowedTemperature().getValue());
+        assertSizesEquals(66, report.getMaintainedTemperatures().getThermocoupleMeanTemperature().getValue());
 
         assertEquals(6, report.getMaintainedTemperatures().getThermocoupleTemperatures().size());
 
         report.getMaintainedTemperatures().getThermocoupleTemperatures()
                 .forEach(thermocoupleTemperature ->
-                        assertSizesEquals(65, thermocoupleTemperature.getValue()));
+                        assertSizesEquals(66, thermocoupleTemperature.getValue()));
     }
 
 }

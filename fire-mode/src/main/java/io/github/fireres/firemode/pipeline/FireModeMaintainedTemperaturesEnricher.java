@@ -9,9 +9,7 @@ import io.github.fireres.core.pipeline.ReportEnricher;
 import io.github.fireres.core.properties.GeneralProperties;
 import io.github.fireres.core.service.FunctionsGenerationService;
 import io.github.fireres.firemode.generator.MaxAllowedTempGenerator;
-import io.github.fireres.firemode.generator.FurnaceTempGenerator;
 import io.github.fireres.firemode.generator.MinAllowedTempGenerator;
-import io.github.fireres.firemode.model.FurnaceTemperature;
 import io.github.fireres.firemode.model.MaintainedTemperatures;
 import io.github.fireres.firemode.model.MaxAllowedTemperature;
 import io.github.fireres.firemode.model.MinAllowedTemperature;
@@ -53,9 +51,8 @@ public class FireModeMaintainedTemperaturesEnricher implements ReportEnricher<Fi
 
     private MaintainedTemperatures generateMaintainedTemperatures(FireModeReport report, Integer temperatureMaintainingTime) {
         val standardTemperature = generateMaintainedStandardTemperature(report.getProperties().getTemperaturesMaintaining(), temperatureMaintainingTime);
-        val furnaceTemperature = generateMaintainedFurnaceTemperature(standardTemperature);
-        val minAllowedTemperature = generateMaintainedMinAllowedTemperature(furnaceTemperature);
-        val maxAllowedTemperature = generateMaintainedMaxAllowedTemperature(furnaceTemperature);
+        val minAllowedTemperature = generateMaintainedMinAllowedTemperature(standardTemperature);
+        val maxAllowedTemperature = generateMaintainedMaxAllowedTemperature(standardTemperature);
 
         val thermocoupleTemperatures = generateMaintainedThermocoupleTemperatures(
                 minAllowedTemperature, maxAllowedTemperature, report, temperatureMaintainingTime);
@@ -64,16 +61,11 @@ public class FireModeMaintainedTemperaturesEnricher implements ReportEnricher<Fi
 
         return MaintainedTemperatures.builder()
                 .standardTemperature(standardTemperature)
-                .furnaceTemperature(furnaceTemperature)
                 .minAllowedTemperature(minAllowedTemperature)
                 .maxAllowedTemperature(maxAllowedTemperature)
                 .thermocoupleTemperatures(thermocoupleTemperatures)
                 .thermocoupleMeanTemperature(meanTemperature)
                 .build();
-    }
-
-    private FurnaceTemperature generateMaintainedFurnaceTemperature(StandardTemperature standardTemperature) {
-        return new FurnaceTempGenerator(generalProperties.getEnvironmentTemperature(), standardTemperature).generate();
     }
 
     private List<ThermocoupleTemperature> generateMaintainedThermocoupleTemperatures(MinAllowedTemperature minAllowedTemperature,
@@ -100,12 +92,12 @@ public class FireModeMaintainedTemperaturesEnricher implements ReportEnricher<Fi
                 .collect(Collectors.toList());
     }
 
-    private MaxAllowedTemperature generateMaintainedMaxAllowedTemperature(FurnaceTemperature furnaceTemperature) {
-        return new MaxAllowedTempGenerator(furnaceTemperature).generate();
+    private MaxAllowedTemperature generateMaintainedMaxAllowedTemperature(StandardTemperature standardTemperature) {
+        return new MaxAllowedTempGenerator(standardTemperature).generate();
     }
 
-    private MinAllowedTemperature generateMaintainedMinAllowedTemperature(FurnaceTemperature furnaceTemperature) {
-        return new MinAllowedTempGenerator(furnaceTemperature).generate();
+    private MinAllowedTemperature generateMaintainedMinAllowedTemperature(StandardTemperature standardTemperature) {
+        return new MinAllowedTempGenerator(standardTemperature).generate();
     }
 
     private StandardTemperature generateMaintainedStandardTemperature(Integer temperature, Integer temperatureMaintainingTime) {

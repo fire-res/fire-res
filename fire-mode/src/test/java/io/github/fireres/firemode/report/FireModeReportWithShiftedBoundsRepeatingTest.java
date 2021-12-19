@@ -58,8 +58,6 @@ public class FireModeReportWithShiftedBoundsRepeatingTest extends AbstractTest {
 
         FireModeTestUtils.chooseNextFireModeType(report.getProperties());
 
-        val furnaceTemp = report.getFurnaceTemperature().getValue();
-
         val minAllowedTemp =
                 report.getMinAllowedTemperature()
                         .getShiftedValue(boundsShift.getMinAllowedTemperatureShift());
@@ -71,12 +69,12 @@ public class FireModeReportWithShiftedBoundsRepeatingTest extends AbstractTest {
         val standardTemp = report.getStandardTemperature().getValue();
 
         //noinspection unchecked
-        assertSizesEquals(TIME, furnaceTemp, minAllowedTemp, maxAllowedTemp, standardTemp);
+        assertSizesEquals(TIME, minAllowedTemp, maxAllowedTemp, standardTemp);
 
         assertFunctionNotHigher(minAllowedTemp, maxAllowedTemp);
 
-        assertFunctionNotLower(furnaceTemp, minAllowedTemp);
-        assertFunctionNotHigher(furnaceTemp, maxAllowedTemp);
+        assertFunctionNotLower(standardTemp, minAllowedTemp);
+        assertFunctionNotHigher(standardTemp, maxAllowedTemp);
 
         val meanTemp = report.getThermocoupleMeanTemperature();
 
