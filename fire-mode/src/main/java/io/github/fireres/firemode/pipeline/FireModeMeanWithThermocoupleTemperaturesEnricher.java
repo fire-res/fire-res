@@ -11,14 +11,12 @@ import io.github.fireres.firemode.model.ThermocoupleMeanTemperature;
 import io.github.fireres.firemode.model.ThermocoupleTemperature;
 import io.github.fireres.firemode.report.FireModeReport;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Component
 @RequiredArgsConstructor
 public class FireModeMeanWithThermocoupleTemperaturesEnricher implements ReportEnricher<FireModeReport> {
