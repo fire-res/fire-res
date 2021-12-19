@@ -1,11 +1,11 @@
 package io.github.fireres.firemode.generator;
 
+import io.github.fireres.core.generator.PointSequenceGenerator;
+import io.github.fireres.core.model.IntegerPoint;
+import io.github.fireres.firemode.model.MinAllowedTemperature;
 import io.github.fireres.firemode.model.StandardTemperature;
 import io.github.fireres.firemode.properties.Coefficient;
 import io.github.fireres.firemode.properties.Coefficients;
-import io.github.fireres.core.generator.PointSequenceGenerator;
-import io.github.fireres.firemode.model.MinAllowedTemperature;
-import io.github.fireres.core.model.IntegerPoint;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -18,12 +18,10 @@ import static java.util.Collections.emptyList;
 
 @RequiredArgsConstructor
 @Slf4j
-public class MinAllowedTempGenerator implements PointSequenceGenerator<MinAllowedTemperature> {
+public class MaintainedMinAllowedTempGenerator implements PointSequenceGenerator<MinAllowedTemperature> {
 
     private static final Coefficients COEFFICIENTS = new Coefficients(List.of(
-            new Coefficient(0, 10, 0.85),
-            new Coefficient(11, 30, 0.9),
-            new Coefficient(31, Integer.MAX_VALUE, 0.95)
+            new Coefficient(0, Integer.MAX_VALUE, 0.95)
     ));
 
     private final StandardTemperature standardTemperature;

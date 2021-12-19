@@ -10,6 +10,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static io.github.fireres.core.test.TestUtils.toPointList;
@@ -51,7 +53,7 @@ public class FireModeReportTest extends AbstractTest {
                 993, 996, 999, 1002, 1004,
                 1006, 1009, 1011, 1013, 1015,
                 1017
-        ));
+        ), 0);
 
         val maxAllowedTemp = report.getMaxAllowedTemperature();
 
@@ -78,7 +80,7 @@ public class FireModeReportTest extends AbstractTest {
                 899, 902, 903, 906, 908,
                 910, 913, 915, 917, 919,
                 921
-        ));
+        ), 0);
 
         val minAllowedTemp = report.getMinAllowedTemperature();
 
@@ -105,11 +107,36 @@ public class FireModeReportTest extends AbstractTest {
                 946, 949, 951, 954, 956,
                 958, 961, 963, 965, 967,
                 969
-        ));
+        ), 0);
 
         val standardTemperature = report.getStandardTemperature();
 
         Assert.assertEquals(expectedNumbers, standardTemperature.getValue());
+    }
+
+    @Test
+    public void generateMaintainedMaxAllowedTemperature() {
+        reportProperties.setTemperaturesMaintaining(600);
+
+        val report = fireModeService.createReport(sample, reportProperties);
+
+        val maxAllowedTemp = report.getMaintainedTemperatures().getMaxAllowedTemperature();
+        val size = maxAllowedTemp.getValue().size();
+        val expectedFunction = toPointList(new ArrayList<>(Collections.nCopies(size, 630)), 5);
+
+        Assert.assertEquals(expectedFunction, maxAllowedTemp.getValue());
+    }
+
+    @Test
+    public void generateMaintainedMinAllowedTemperature() {
+        reportProperties.setTemperaturesMaintaining(600);
+        val report = fireModeService.createReport(sample, reportProperties);
+
+        val minAllowedTemp = report.getMaintainedTemperatures().getMinAllowedTemperature();
+        val size = minAllowedTemp.getValue().size();
+        val expectedFunction = toPointList(new ArrayList<>(Collections.nCopies(size, 570)), 5);
+
+        Assert.assertEquals(expectedFunction, minAllowedTemp.getValue());
     }
 
 }

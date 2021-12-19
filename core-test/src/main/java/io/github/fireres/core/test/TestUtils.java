@@ -82,9 +82,9 @@ public class TestUtils {
         assertFunctionNotHigher(lowerFunction, upperFunction);
     }
 
-    public static List<IntegerPoint> toPointList(List<Integer> list) {
+    public static List<IntegerPoint> toPointList(List<Integer> list, Integer startFrom) {
         return IntStream.range(0, list.size())
-                .mapToObj(i -> new IntegerPoint(i, list.get(i)))
+                .mapToObj(i -> new IntegerPoint(i + startFrom, list.get(i)))
                 .collect(Collectors.toList());
     }
 

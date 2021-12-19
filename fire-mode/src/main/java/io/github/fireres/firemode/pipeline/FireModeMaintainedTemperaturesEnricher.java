@@ -8,16 +8,14 @@ import io.github.fireres.core.pipeline.ReportEnrichType;
 import io.github.fireres.core.pipeline.ReportEnricher;
 import io.github.fireres.core.properties.GeneralProperties;
 import io.github.fireres.core.service.FunctionsGenerationService;
-import io.github.fireres.firemode.generator.MaxAllowedTempGenerator;
-import io.github.fireres.firemode.generator.MinAllowedTempGenerator;
+import io.github.fireres.firemode.generator.MaintainedMaxAllowedTempGenerator;
+import io.github.fireres.firemode.generator.MaintainedMinAllowedTempGenerator;
 import io.github.fireres.firemode.model.MaintainedTemperatures;
 import io.github.fireres.firemode.model.MaxAllowedTemperature;
 import io.github.fireres.firemode.model.MinAllowedTemperature;
 import io.github.fireres.firemode.model.StandardTemperature;
 import io.github.fireres.firemode.model.ThermocoupleMeanTemperature;
 import io.github.fireres.firemode.model.ThermocoupleTemperature;
-import io.github.fireres.firemode.properties.Coefficient;
-import io.github.fireres.firemode.properties.Coefficients;
 import io.github.fireres.firemode.report.FireModeReport;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -95,25 +93,11 @@ public class FireModeMaintainedTemperaturesEnricher implements ReportEnricher<Fi
     }
 
     private MaxAllowedTemperature generateMaintainedMaxAllowedTemperature(StandardTemperature standardTemperature) {
-        MaxAllowedTempGenerator maxAllowedTempGenerator = new MaxAllowedTempGenerator(standardTemperature);
-        Coefficients coefficients = new Coefficients(List.of(
-                new Coefficient(0, Integer.MAX_VALUE, 1.05)
-        ));
-
-        maxAllowedTempGenerator.setCustomCoefficients(coefficients);
-
-        return maxAllowedTempGenerator.generate();
+        return new MaintainedMaxAllowedTempGenerator(standardTemperature).generate();
     }
 
     private MinAllowedTemperature generateMaintainedMinAllowedTemperature(StandardTemperature standardTemperature) {
-        MinAllowedTempGenerator minAllowedTempGenerator = new MinAllowedTempGenerator(standardTemperature);
-        Coefficients coefficients = new Coefficients(List.of(
-                new Coefficient(0, Integer.MAX_VALUE, 0.95)
-        ));
-
-        minAllowedTempGenerator.setCustomCoefficients(coefficients);
-
-        return minAllowedTempGenerator.generate();
+        return new MaintainedMinAllowedTempGenerator(standardTemperature).generate();
     }
 
     private StandardTemperature generateMaintainedStandardTemperature(Integer temperature, Integer temperatureMaintainingTime) {
