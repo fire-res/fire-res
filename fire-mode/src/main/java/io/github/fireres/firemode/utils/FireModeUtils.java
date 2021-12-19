@@ -1,6 +1,5 @@
 package io.github.fireres.firemode.utils;
 
-import io.github.fireres.firemode.model.FurnaceTemperature;
 import io.github.fireres.firemode.model.MaxAllowedTemperature;
 import io.github.fireres.firemode.model.MinAllowedTemperature;
 import io.github.fireres.firemode.model.StandardTemperature;
@@ -35,16 +34,6 @@ public class FireModeUtils {
                             .getValue());
         } else {
             return report.getStandardTemperature();
-        }
-    }
-
-    public static FurnaceTemperature getMaintainedFurnaceTemperature(FireModeReport report) {
-        if (report.getMaintainedTemperatures() != null) {
-            return new FurnaceTemperature(
-                    merge(report.getFurnaceTemperature(), report.getMaintainedTemperatures().getFurnaceTemperature())
-                            .getValue());
-        } else {
-            return report.getFurnaceTemperature();
         }
     }
 

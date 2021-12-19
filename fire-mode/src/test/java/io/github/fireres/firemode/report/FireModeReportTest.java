@@ -28,29 +28,7 @@ public class FireModeReportTest extends AbstractTest {
     @Before
     public void setup() {
         sample.removeAllReports();
-    }
-
-    @Test
-    public void generateFurnaceTemperature() {
-        val report = fireModeService.createReport(sample, reportProperties);
-
-        val expectedValues = toPointList(List.of(
-                42, 350, 446, 503, 545, 577, 604,
-                627, 646, 664, 679, 694, 706, 718,
-                729, 740, 749, 758, 767, 775, 782,
-                790, 797, 803, 810, 816, 821, 827,
-                833, 838, 843, 848, 852, 857, 861,
-                866, 870, 874, 878, 882, 886, 889,
-                893, 897, 900, 903, 907, 910, 913,
-                916, 919, 922, 925, 928, 931, 933,
-                936, 939, 941, 944, 946, 949, 951,
-                954, 956, 958, 961, 963, 965, 967,
-                969
-        ));
-
-        val furnaceTemp = report.getFurnaceTemperature();
-
-        Assert.assertEquals(expectedValues, furnaceTemp.getValue());
+        reportProperties.getFunctionForm().getInterpolationPoints().clear();
     }
 
     @Test
@@ -58,7 +36,7 @@ public class FireModeReportTest extends AbstractTest {
         val report = fireModeService.createReport(sample, reportProperties);
 
         val expectedFunction = toPointList(List.of(
-                48, 402, 513, 578, 627,
+                24, 402, 513, 578, 627,
                 664, 695, 721, 743, 764,
                 781, 763, 777, 790, 802,
                 814, 824, 834, 844, 853,
@@ -85,7 +63,7 @@ public class FireModeReportTest extends AbstractTest {
         val report = fireModeService.createReport(sample, reportProperties);
 
         val expectedFunction = toPointList(List.of(
-                36, 298, 379, 428, 463,
+                18, 298, 379, 428, 463,
                 490, 513, 533, 549, 564,
                 577, 625, 635, 646, 656,
                 666, 674, 682, 690, 698,
@@ -112,15 +90,21 @@ public class FireModeReportTest extends AbstractTest {
         val report = fireModeService.createReport(sample, reportProperties);
 
         val expectedNumbers = toPointList(List.of(
-                21, 329, 425, 482, 524, 556, 583, 606,
-                625, 643, 658, 673, 685, 697, 708, 719,
-                728, 737, 746, 754, 761, 769, 776, 782,
-                789, 795, 800, 806, 812, 817, 822, 827,
-                831, 836, 840, 845, 849, 853, 857, 861,
-                865, 868, 872, 876, 879, 882, 886, 889,
-                892, 895, 898, 901, 904, 907, 910, 912,
-                915, 918, 920, 923, 925, 928, 930, 933,
-                935, 937, 940, 942, 944, 946, 948
+                21, 350, 446, 503, 545,
+                577, 604, 627, 646, 664,
+                679, 694, 706, 718, 729,
+                740, 749, 758, 767, 775,
+                782, 790, 797, 803, 810,
+                816, 821, 827, 833, 838,
+                843, 848, 852, 857, 861,
+                866, 870, 874, 878, 882,
+                886, 889, 893, 897, 900,
+                903, 907, 910, 913, 916,
+                919, 922, 925, 928, 931,
+                933, 936, 939, 941, 944,
+                946, 949, 951, 954, 956,
+                958, 961, 963, 965, 967,
+                969
         ));
 
         val standardTemperature = report.getStandardTemperature();

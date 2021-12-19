@@ -4,7 +4,6 @@ import io.github.fireres.core.model.Report;
 import io.github.fireres.core.model.ReportType;
 import io.github.fireres.core.model.Sample;
 import io.github.fireres.firemode.properties.FireModeProperties;
-import io.github.fireres.firemode.model.FurnaceTemperature;
 import io.github.fireres.firemode.model.MaintainedTemperatures;
 import io.github.fireres.firemode.model.MaxAllowedTemperature;
 import io.github.fireres.firemode.model.MinAllowedTemperature;
@@ -31,7 +30,6 @@ public class FireModeReport implements Report<FireModeProperties> {
     private StandardTemperature standardTemperature;
     private MinAllowedTemperature minAllowedTemperature;
     private MaxAllowedTemperature maxAllowedTemperature;
-    private FurnaceTemperature furnaceTemperature;
     private List<ThermocoupleTemperature> thermocoupleTemperatures;
     private ThermocoupleMeanTemperature thermocoupleMeanTemperature;
 

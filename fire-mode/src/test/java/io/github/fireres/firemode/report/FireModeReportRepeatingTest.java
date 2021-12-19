@@ -46,19 +46,18 @@ public class FireModeReportRepeatingTest extends AbstractTest {
 
         FireModeTestUtils.chooseNextFireModeType(report.getProperties());
 
-        val furnaceTemp = report.getFurnaceTemperature().getValue();
         val minAllowedTemp = report.getMinAllowedTemperature().getValue();
         val maxAllowedTemp = report.getMaxAllowedTemperature().getValue();
         val standardTemp = report.getStandardTemperature().getValue();
 
         //noinspection unchecked
-        assertSizesEquals(TIME, furnaceTemp, minAllowedTemp, maxAllowedTemp, standardTemp);
+        assertSizesEquals(TIME, minAllowedTemp, maxAllowedTemp, standardTemp);
 
         assertFunctionConstantlyGrowing(minAllowedTemp);
         assertFunctionNotHigher(minAllowedTemp, maxAllowedTemp);
 
-        assertFunctionNotLower(furnaceTemp, minAllowedTemp);
-        assertFunctionNotHigher(furnaceTemp, maxAllowedTemp);
+        assertFunctionNotLower(standardTemp, minAllowedTemp);
+        assertFunctionNotHigher(standardTemp, maxAllowedTemp);
 
         val meanTemp = report.getThermocoupleMeanTemperature();
 
