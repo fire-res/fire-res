@@ -10,6 +10,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static io.github.fireres.core.test.TestUtils.toPointList;
@@ -110,6 +112,31 @@ public class FireModeReportTest extends AbstractTest {
         val standardTemperature = report.getStandardTemperature();
 
         Assert.assertEquals(expectedNumbers, standardTemperature.getValue());
+    }
+
+    @Test
+    public void generateMaintainedMaxAllowedTemperature() {
+        reportProperties.setTemperaturesMaintaining(600);
+
+        val report = fireModeService.createReport(sample, reportProperties);
+
+        val maxAllowedTemp = report.getMaintainedTemperatures().getMaxAllowedTemperature();
+        val size = maxAllowedTemp.getValue().size();
+        val expectedFunction = toPointList(new ArrayList<>(Collections.nCopies(size, 630)), 5);
+
+        Assert.assertEquals(expectedFunction, maxAllowedTemp.getValue());
+    }
+
+    @Test
+    public void generateMaintainedMinAllowedTemperature() {
+        reportProperties.setTemperaturesMaintaining(600);
+        val report = fireModeService.createReport(sample, reportProperties);
+
+        val minAllowedTemp = report.getMaintainedTemperatures().getMinAllowedTemperature();
+        val size = minAllowedTemp.getValue().size();
+        val expectedFunction = toPointList(new ArrayList<>(Collections.nCopies(size, 570)), 5);
+
+        Assert.assertEquals(expectedFunction, minAllowedTemp.getValue());
     }
 
 }

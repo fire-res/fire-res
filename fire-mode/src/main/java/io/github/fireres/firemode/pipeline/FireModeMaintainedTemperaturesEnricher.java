@@ -8,8 +8,8 @@ import io.github.fireres.core.pipeline.ReportEnrichType;
 import io.github.fireres.core.pipeline.ReportEnricher;
 import io.github.fireres.core.properties.GeneralProperties;
 import io.github.fireres.core.service.FunctionsGenerationService;
-import io.github.fireres.firemode.generator.MaxAllowedTempGenerator;
-import io.github.fireres.firemode.generator.MinAllowedTempGenerator;
+import io.github.fireres.firemode.generator.MaintainedMaxAllowedTempGenerator;
+import io.github.fireres.firemode.generator.MaintainedMinAllowedTempGenerator;
 import io.github.fireres.firemode.model.MaintainedTemperatures;
 import io.github.fireres.firemode.model.MaxAllowedTemperature;
 import io.github.fireres.firemode.model.MinAllowedTemperature;
@@ -93,11 +93,11 @@ public class FireModeMaintainedTemperaturesEnricher implements ReportEnricher<Fi
     }
 
     private MaxAllowedTemperature generateMaintainedMaxAllowedTemperature(StandardTemperature standardTemperature) {
-        return new MaxAllowedTempGenerator(standardTemperature).generate();
+        return new MaintainedMaxAllowedTempGenerator(standardTemperature).generate();
     }
 
     private MinAllowedTemperature generateMaintainedMinAllowedTemperature(StandardTemperature standardTemperature) {
-        return new MinAllowedTempGenerator(standardTemperature).generate();
+        return new MaintainedMinAllowedTempGenerator(standardTemperature).generate();
     }
 
     private StandardTemperature generateMaintainedStandardTemperature(Integer temperature, Integer temperatureMaintainingTime) {
